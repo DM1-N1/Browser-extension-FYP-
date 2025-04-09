@@ -12,3 +12,4 @@ print(dataset.dtypes)
 
 # Ckecking if the datatset is balanced by checking legitamate against phishing in the status column
 print(dataset['status'].value_counts())
+
