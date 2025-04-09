@@ -6,5 +6,7 @@ import pandas as pd
 dataset = pd.read_csv('C:/Users/user/OneDrive/Desktop/Software engineering/Third year L6/Browser-extension-FYP-/dataset_phishing.csv')
 print(dataset.head())
 
-#Check datatypes
+#Check datatypes with all the rows showing 
+pd.set_option('display.max_rows', None)
 print(dataset.dtypes)
+
