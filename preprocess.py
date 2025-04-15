@@ -42,36 +42,44 @@ dataset = pd.read_csv('/workspaces/Browser-extension-FYP-/updated.csv')
 # dataset.to_csv("updated.csv", index=False)
 
 
-# Map of features for comparison
-feature_checks = {
-    'url_numeric_has_ip': ['ip'],
-    'url_numeric_uses_https': ['https_token'],
-    'url_numeric_path_length': ['length_url'],
-    'url_numeric_num_subdomains': ['nb_subdomains'],
-    'url_numeric_has_special_chars': ['nb_at', 'nb_hyphens', 'nb_eq'],
-}
+# # Map of features for comparison
+# feature_checks = {
+#     'url_numeric_has_ip': ['ip'],
+#     'url_numeric_uses_https': ['https_token'],
+#     'url_numeric_path_length': ['length_url'],
+#     'url_numeric_num_subdomains': ['nb_subdomains'],
+#     'url_numeric_has_special_chars': ['nb_at', 'nb_hyphens', 'nb_eq'],
+# }
 
-# Compare numeric features
-for extracted_feat, matches in feature_checks.items():
-    if extracted_feat == 'url_numeric_domain':
-        continue 
+# # Compare numeric features
+# for extracted_feat, matches in feature_checks.items():
+#     if extracted_feat == 'url_numeric_domain':
+#         continue 
 
-    for match in matches:
-        if extracted_feat in dataset.columns and match in dataset.columns:
-            print(f"\nComparing: {extracted_feat} and {match}")
+#     for match in matches:
+#         if extracted_feat in dataset.columns and match in dataset.columns:
+#             print(f"\nComparing: {extracted_feat} and {match}")
             
-            if (dataset[extracted_feat] == dataset[match]).all():
-                print(" Identical values — consider dropping one.")
-                continue
+#             if (dataset[extracted_feat] == dataset[match]).all():
+#                 print(" Identical values — consider dropping one.")
+#                 continue
 
-            corr = np.corrcoef(dataset[extracted_feat], dataset[match])[0, 1]
-            print(f" Correlation: {corr:.4f}")
+#             corr = np.corrcoef(dataset[extracted_feat], dataset[match])[0, 1]
+#             print(f" Correlation: {corr:.4f}")
 
-            if abs(corr) > 0.95:
-                print(" High correlation probably a duplicate.")
-            elif abs(corr) > 0.5:
-                print(" Medium correlation might be useful ")
-            else:
-                print(" Low correlation most likely keep this.")
-        else:
-            print(f" Skipping: '{extracted_feat}' or '{match}' not found.")
+#             if abs(corr) > 0.95:
+#                 print(" High correlation probably a duplicate.")
+#             elif abs(corr) > 0.5:
+#                 print(" Medium correlation might be useful ")
+#             else:
+#                 print(" Low correlation most likely keep this.")
+#         else:
+#             print(f" Skipping: '{extracted_feat}' or '{match}' not found.")
+
+
+columns_to_drop = ['url_numeric_uses_https']
+dataset.drop(columns=columns_to_drop, inplace=True)
+print("Column dropped")
+# # Save the cleaned dataset
+dataset.to_csv("updated.csv", index=False)
+print("Dataset saved")
