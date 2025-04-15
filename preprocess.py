@@ -14,12 +14,3 @@ print(dataset.dtypes)
 # Ckecking if the datatset is balanced by checking legitamate against phishing in the status column
 print(dataset['status'].value_counts())
 
-# Drops the url column from the datset and create a copy 
-
-try:
-    dataset.drop(columns=['url'], inplace=True) 
-    print("Url column dropped")
-    dataset.to_csv('/workspaces/Browser-extension-FYP-/dataset_phishing_no_url_updated.csv', index=False)
-    print("Updated dataset saved to 'dataset_phishing_no_url_updated.csv'")
-except:
-    print("Column has already been dropped")
