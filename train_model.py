@@ -19,20 +19,24 @@ X_train, X_test, y_train, y_test = train_test_split(
     x, y, test_size=0.2, train_size=0.8, random_state=42, shuffle=True, stratify=y
 )
 
+# This is a function to train and evaluate the model 
+def train_and_evaluate_model(model, X_train, y_train, X_test, y_test):
+    model.fit(X_train, y_train) # fit the model to the training/testing data
+    y_pred = model.predict(X_test) 
+    print("Results for", model.__class__.__name__)
+    print("Accuracy:", accuracy_score(y_test, y_pred))
+    print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
+    print("Classification Report:\n", classification_report(y_test, y_pred))
 
 
 #This part trains the RandomForest Classifier model
 # n_estimators= is the number of decision trees the more trees the better the accuracy but it can slow down prediction time and training time
-model = RandomForestClassifier(n_estimators=100, random_state=42)
-model.fit(X_train, y_train)
+rf = RandomForestClassifier(n_estimators=100, random_state=42)
+train_and_evaluate_model(rf, X_train, y_train, X_test, y_test)
 
 # This part tests the model on the test set and prints the accuracy, confusion matrix, and classification report
 # The accuracy score is the percentage of correct predictions
 # The confusion matrix shows the number of true positives, true negatives, false positives, and false negatives
 # The classification report shows the precision, recall, and f1-score for each class
-y_pred = model.predict(X_test)
-print("Accuracy:", accuracy_score(y_test, y_pred))
-print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
-print("Classification Report:\n", classification_report(y_test, y_pred))
 
 # joblib.dump(model, "random_forest_no_url.pkl")
