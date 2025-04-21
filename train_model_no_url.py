@@ -37,8 +37,9 @@ def train_and_evaluate_model(model, X_train, y_train, X_test, y_test):
 
 
 #This part trains the RandomForest Classifier model
-# n_estimators= is the number of decision trees the more trees the better the accuracy but it can slow down prediction time and training time
-rf = RandomForestClassifier(n_estimators=100, random_state=42)
+# n_estimators is the number of decision trees the more trees the better the accuracy but it can slow down prediction time and training time
+# max_depth is the maximum depth of the trees
+rf = RandomForestClassifier(n_estimators=100, random_state=42,max_depth=20)
 train_and_evaluate_model(rf, X_train, y_train, X_test, y_test)
 
 # This part trains the Gradient Boosting Classifier model
@@ -54,22 +55,12 @@ lr = LogisticRegression(max_iter=2000, random_state=42, solver='liblinear')
 train_and_evaluate_model(lr, X_train, y_train, X_test, y_test)
 
 # This part trains the K-Nearest Neighbors model
-knn = KNeighborsClassifier(n_neighbors=5)
+knn = KNeighborsClassifier(n_neighbors=5,weights='distance')
 train_and_evaluate_model(knn, X_train, y_train, X_test, y_test)
 
 # This part trains the Decision Tree model
-dt = DecisionTreeClassifier(random_state=42)
+dt = DecisionTreeClassifier(random_state=42, max_depth=20)
 train_and_evaluate_model(dt, X_train, y_train, X_test, y_test)
 
 
-
-
-
-
 # joblib.dump(model, "random_forest_no_url.pkl")
-
-
-
-
-# Naive Bayes (optional — good baseline but less often best performer)
-# MLPClassifier (a basic neural network, counts as "deep" learning in scikit-learn)
