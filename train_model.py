@@ -1,6 +1,10 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier,AdaBoostClassifier,
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier,AdaBoostClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 import joblib
 
@@ -38,15 +42,37 @@ def train_and_evaluate_model(model, X_train, y_train, X_test, y_test):
 rf = RandomForestClassifier(n_estimators=100, random_state=42)
 train_and_evaluate_model(rf, X_train, y_train, X_test, y_test)
 
+# This part trains the Gradient Boosting Classifier model
+gb = GradientBoostingClassifier(n_estimators=100, random_state=42) 
+train_and_evaluate_model(gb, X_train, y_train, X_test, y_test)
+
+# This part trains the AdaBoost Classifier model
+ab = AdaBoostClassifier(n_estimators=100, random_state=42)
+train_and_evaluate_model(ab, X_train, y_train, X_test, y_test)
+
+# This part trains the Logistic Regression model
+lr = LogisticRegression(max_iter=2000, random_state=42, solver='liblinear')
+train_and_evaluate_model(lr, X_train, y_train, X_test, y_test)
+
+# This part trains the K-Nearest Neighbors model
+knn = KNeighborsClassifier(n_neighbors=5)
+train_and_evaluate_model(knn, X_train, y_train, X_test, y_test)
+
+# This part trains the Decision Tree model
+dt = DecisionTreeClassifier(random_state=42)
+train_and_evaluate_model(dt, X_train, y_train, X_test, y_test)
+
+# This part trains the Support Vector Machine model
+svm = SVC(kernel='linear', random_state=42)
+train_and_evaluate_model(svm, X_train, y_train, X_test, y_test)
+
+
 
 
 # joblib.dump(model, "random_forest_no_url.pkl")
 
 
-# Logistic Regression
-# K-Nearest Neighbors (KNN)
-# Support Vector Machine (SVM)
-# Decision Tree
+
+
 # Naive Bayes (optional — good baseline but less often best performer)
-# Gradient Boosting (like GradientBoostingClassifier)
 # MLPClassifier (a basic neural network, counts as "deep" learning in scikit-learn)
