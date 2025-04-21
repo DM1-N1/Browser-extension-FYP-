@@ -39,7 +39,7 @@ def train_and_evaluate_model(model, X_train, y_train, X_test, y_test):
 #This part trains the RandomForest Classifier model
 # n_estimators is the number of decision trees the more trees the better the accuracy but it can slow down prediction time and training time
 # max_depth is the maximum depth of the trees
-rf = RandomForestClassifier(n_estimators=100, random_state=42,max_depth=20)
+rf = RandomForestClassifier(n_estimators=200, random_state=42,max_depth=20)
 train_and_evaluate_model(rf, X_train, y_train, X_test, y_test)
 
 # This part trains the Gradient Boosting Classifier model
