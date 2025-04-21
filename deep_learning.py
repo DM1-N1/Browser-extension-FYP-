@@ -13,30 +13,38 @@ x = dataset_no_url.drop(columns=['status'])
 # y is the target/classifier column status
 y = dataset_no_url['status']
 
-# Scale the features (important for deep learning)
+# Scaling the features is important in order to ensure all the input variables are on a similar scale.
+#This stops features with larger numerical values from dominating 
+# the training process and improves the efficiency and accuracy of machine learning. 
+# StandardScaler uses standardisation making sure each feature has a mean of 0 and a standard deviation of 1 for a 
+# smoother and more reliable training process.
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(x)
 
-# Train-test split
 X_train, X_test, y_train, y_test = train_test_split(
     x, y, test_size=0.2, train_size=0.8, random_state=42, shuffle=True, stratify=y
 )
 
 # Build the model
-model = Sequential()
+# model.add is for the different layers of the model and what type of activation function is used  for each layer
+# The activation function is a mathematical function that determines the output of a node in a neural network
+model = Sequential()  # Sequential model was used because its good for simple layer by layer deep learning model
+# Its good for tabular data like mine and is good for comparison with traditional ML models like the
+# ones used in the train_model.py file
 model.add(Input(shape=(X_train.shape[1],)))
 model.add(Dense(128, activation='relu', input_shape=(X_train.shape[1],)))
 model.add(Dense(64, activation='relu'))
-model.add(Dense(1, activation='sigmoid'))  # Binary classification
+model.add(Dense(1, activation='sigmoid'))  # Binary classifier
 
-# Compile the model
+# This part compiles the model
 model.compile(
     optimizer=Adam(learning_rate=0.001),
     loss='binary_crossentropy',
     metrics=['accuracy']
 )
 
-# Train the model
+# This part trains the model
+#epochs is the number of times the model will see the entire training data
 history = model.fit(X_train, y_train, epochs=20, batch_size=32, validation_split=0.2)
 
 # Predict and evaluate
