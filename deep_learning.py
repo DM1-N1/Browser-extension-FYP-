@@ -7,11 +7,11 @@ from tensorflow.keras.layers import Dense
 from keras.optimizers import Adam
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 
-dataset_no_url = pd.read_csv('/workspaces/Browser-extension-FYP-/dataset_no_url.csv')
+dataset_with_url = pd.read_csv('/workspaces/Browser-extension-FYP-/dataset_no_url.csv')
 # x is the features only hecnce why we drop the target/classifier column status 
-x = dataset_no_url.drop(columns=['status'])
+x = dataset_with_url.drop(columns=['status'])
 # y is the target/classifier column status
-y = dataset_no_url['status']
+y = dataset_with_url['status']
 
 # Scaling the features is important in order to ensure all the input variables are on a similar scale.
 #This stops features with larger numerical values from dominating 
