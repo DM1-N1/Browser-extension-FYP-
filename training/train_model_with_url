@@ -62,5 +62,8 @@ train_and_evaluate_model(knn, X_train, y_train, X_test, y_test)
 dt = DecisionTreeClassifier(random_state=42, max_depth=20)
 train_and_evaluate_model(dt, X_train, y_train, X_test, y_test)
 
+#Saves the best optimised model which is rf on this dataset.
+joblib.dump(rf, "ai_model.pkl")
 
-# joblib.dump(model, "random_forest_no_url.pkl")
+# Saves the features used in the model
+joblib.dump(x.columns, "features.pkl")
