@@ -1,6 +1,6 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier,AdaBoostClassifier,
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 import joblib
 
@@ -23,6 +23,10 @@ X_train, X_test, y_train, y_test = train_test_split(
 def train_and_evaluate_model(model, X_train, y_train, X_test, y_test):
     model.fit(X_train, y_train) # fit the model to the training/testing data
     y_pred = model.predict(X_test) 
+    # This part tests the model on the test set and prints the accuracy, confusion matrix, and classification report
+    # The accuracy score is the percentage of correct predictions
+    # The confusion matrix shows the number of true positives, true negatives, false positives, and false negatives
+    # The classification report shows the precision, recall, and f1-score for each class
     print("Results for", model.__class__.__name__)
     print("Accuracy:", accuracy_score(y_test, y_pred))
     print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
@@ -34,9 +38,15 @@ def train_and_evaluate_model(model, X_train, y_train, X_test, y_test):
 rf = RandomForestClassifier(n_estimators=100, random_state=42)
 train_and_evaluate_model(rf, X_train, y_train, X_test, y_test)
 
-# This part tests the model on the test set and prints the accuracy, confusion matrix, and classification report
-# The accuracy score is the percentage of correct predictions
-# The confusion matrix shows the number of true positives, true negatives, false positives, and false negatives
-# The classification report shows the precision, recall, and f1-score for each class
+
 
 # joblib.dump(model, "random_forest_no_url.pkl")
+
+
+# Logistic Regression
+# K-Nearest Neighbors (KNN)
+# Support Vector Machine (SVM)
+# Decision Tree
+# Naive Bayes (optional — good baseline but less often best performer)
+# Gradient Boosting (like GradientBoostingClassifier)
+# MLPClassifier (a basic neural network, counts as "deep" learning in scikit-learn)
