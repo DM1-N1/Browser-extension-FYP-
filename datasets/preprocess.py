@@ -34,7 +34,7 @@ try:
 except:
     print("Column has already been dropped")
 
-# STEP 2 
+
 # Get features from the url to change to numerical values
 def extract_url_features(url):
     parsed = urlparse(url)
