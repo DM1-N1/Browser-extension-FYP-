@@ -3,7 +3,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier,AdaBoostClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 import joblib
@@ -62,9 +61,7 @@ train_and_evaluate_model(knn, X_train, y_train, X_test, y_test)
 dt = DecisionTreeClassifier(random_state=42)
 train_and_evaluate_model(dt, X_train, y_train, X_test, y_test)
 
-# This part trains the Support Vector Machine model
-svm = SVC(kernel='linear', random_state=42)
-train_and_evaluate_model(svm, X_train, y_train, X_test, y_test)
+
 
 
 
