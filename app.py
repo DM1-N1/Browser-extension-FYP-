@@ -29,6 +29,7 @@ print(model.n_features_in_)
 
 # Initialize Flask app
 app = Flask(__name__)
+#lol 
 
 # Define the prediction route
 @app.route('/predict', methods=['POST'])
