@@ -4,7 +4,7 @@ from feature_extractor import extract_features
 # The url where the Flask server is running
 url = 'http://127.0.0.1:5000/predict'
 
-test_url = 'http://secure-login.paypal-verification.com/login?user=test'
+test_url = 'http://example.com/test'
 
 feature_dictionary = extract_features(test_url)
 
@@ -39,23 +39,13 @@ data = {'features': feature_list}
 try:
     # Send POST request to Flask API
     response = requests.post(url, json=data)
-    print("This is the prediction resonse",response.json())
-
+    # Check if the response is successful
     if response.status_code == 200:
         prediction = response.json()
-        print("This is the prediction",prediction)
+        print(f'Prediction: {prediction["prediction"]}')
     else:
-        print("Error in the prediction:")
-        print(response.json())
-
-
-    # # Check if the response is successful
-    # if response.status_code == 200:
-    #     prediction = response.json()
-    #     print(f'Prediction: {prediction["prediction"]}')
-    # else:
-    #     # Print error details if the response is not successful
-    #     print(f'Error: {response.status_code}, Response: {response.json()}')
+        # Print error details if the response is not successful
+        print(f'Error: {response.status_code}, Response: {response.json()}')
 
 except:
     print("Could not connect to the flask Server Make sure it is running and the features are correct")
