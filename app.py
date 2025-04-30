@@ -22,7 +22,8 @@ def predict():
         if not features:
             return jsonify({'error': 'No features provided'})
         
-        print("Received features:", features) 
+        # print("Received features:", features)
+        print("Recieved Features)")
         
         
         if len(features) != model.n_features_in_:
