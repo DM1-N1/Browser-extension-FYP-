@@ -17,7 +17,7 @@ function buttonpress() {
 //         url_text.textContent = currenturl; 
 //         console.log("Current URL:", currentTab.url);
 //     });
-   
+
 // }
 
 // function writeUrlToTextFile(url) {
@@ -35,12 +35,38 @@ function buttonpress() {
 //     });
 // }
 
+function getPrediciton() {
+
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        let currentTab = tabs[0]; // get the current page/tab the user is viewing
+        let currenturl = String(currentTab.url);
+        url_text.textContent = currenturl;
+
+
+        fetch("http://127.0.0.1:5000/predict", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ url: currentTab.url })
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Prediction result:", data.prediction);
+            })
+            .catch(error => {
+                console.error("Error fetching prediction:", error);
+            });
+    }
+    );
+}
+
 function addEventListener() {
     button.addEventListener('click', buttonpress);
     // urlbutton.addEventListener('click',geturl);
 }
 
 addEventListener()
-geturl()
+getPrediciton()
 
 // ignore this

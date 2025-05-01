@@ -389,3 +389,5 @@ def extract_features(url):
     features['url_numeric_has_special_chars'] = int(bool(re.search(r'[^a-zA-Z0-9]', url)))
     print(features)
     return features
+
+# Ask wether to have path extension as always 0 or suttin else
