@@ -4,7 +4,7 @@ from feature_extractor import extract_features
 # The url where the Flask server is running
 url = 'http://127.0.0.1:5000/predict'
 
-test_url = 'http://example.com/test'
+test_url = 'http://bbc.com'
 
 feature_dictionary = extract_features(test_url)
 
@@ -29,7 +29,6 @@ model_order = [
 
 #convert the feature dictionary to a list to be safe 
 feature_list = [feature_dictionary[feature] for feature in model_order]
-print("THIS IS THE FEATURE LIST",feature_list)
 
 #create the payload for the post request
 data = {'features': feature_list}
