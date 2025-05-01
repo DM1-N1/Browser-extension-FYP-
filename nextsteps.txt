@@ -1,0 +1,11 @@
+Keep testing out the extension with different sites to pluck out issues 
+Try to get the extension to work before a user visits a page 
+Try to solve pycache issue 
+Try to add extra functionality like the report feature or the false report feature
+Make the error messages more understandable 
+Wherever youve used const get rid of it WE DONT LIKE CONST 
+Refactor and organise code 
+Make it so flask runs automatically once all of the above are done.
+
+
+# DISSOTATION NEEDS DOING ASAP 
