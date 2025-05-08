@@ -190,6 +190,7 @@ def extract_features(url):
     features['url_numeric_num_subdomains'] = hostname.count('.') - 1
     features['url_numeric_has_ip'] = features['ip']
     features['url_numeric_has_special_chars'] = int(bool(re.search(r'[^a-zA-Z0-9]', url)))
+    print(url)
     print(features)
     return features
 
