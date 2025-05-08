@@ -4,7 +4,7 @@ from feature_extractor import extract_features
 # The url where the Flask server is running
 url = 'http://127.0.0.1:5000/predict'
 
-test_url = 'http://bbc.com'
+test_url = 'https://www.google.com/'
 
 feature_dictionary = extract_features(test_url)
 

@@ -1,6 +1,7 @@
 let button = document.querySelector('#button1')
 let urlbutton = document.querySelector('#urlbutton')
 let url_text = document.querySelector('#url')
+let prediction_text = document.querySelector('#prediction')
 
 
 function buttonpress() {
@@ -8,7 +9,15 @@ function buttonpress() {
     window.alert("Your a smart man")
 }
 
-
+function changePredictionText(prediction) {
+    if (prediction === 1) {
+        prediction_text.textContent = "The predicition is Phising";
+    } else if (prediction === 0) {
+        prediction_text.textContent = "The Prediciton is Safe";
+    } else {
+        prediction_text.textContent = "Prediction result is unkwown";
+    }
+}
 function getPrediciton() {
 
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -27,12 +36,15 @@ function getPrediciton() {
             .then(response => response.json())
             .then(data => {
                 console.log("Prediction result:", data.prediction);
+                changePredictionText(data.prediction)
             })
             .catch(error => {
                 console.error("Error fetching prediction:", error);
             });
     }
     );
+
+
 }
 
 function addEventListener() {
