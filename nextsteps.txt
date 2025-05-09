@@ -9,3 +9,30 @@ Make it so flask runs automatically once all of the above are done.
 
 
 # DISSOTATION NEEDS DOING ASAP 
+
+#Mismatched values
+ip
+nb_dslash
+https_token
+nb_subdomains
+length_words_raw
+char_repeat
+shortest_word_host
+avg_words_raw
+avg_word_host
+phish_hints
+nb_hyperlinks
+ratio_intHyperlinks
+ratio_extHyperlinks
+iframe
+safe_anchor
+onmouseover
+domain_with_copyright
+external_favicon
+ratio_extErrors
+domain_registration_length
+domain_age
+google_index
+page_rank
+web_traffic
+dns_record
