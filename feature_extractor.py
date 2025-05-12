@@ -95,7 +95,7 @@ def extract_features(url):
     features['longest_word_path'] = max((len(w) for w in path_words), default=0)
     # features['avg_words_raw'] = mean((len(w) for w in words_raw)) if words_raw else 0
     # features['avg_word_host'] = mean((len(w) for w in host_words)) if host_words else 0
-    features['avg_word_path'] = mean((len(w) for w in path_words)) if path_words else 0
+    # features['avg_word_path'] = mean((len(w) for w in path_words)) if path_words else 0
     suspicious_patterns = ['@', '%', 'http://', 'https://']
     features['phish_hints'] = int(any(pattern in url for pattern in suspicious_patterns))
     brand_keywords = ['paypal', 'bank', 'login', 'secure']

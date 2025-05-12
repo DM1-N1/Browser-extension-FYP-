@@ -468,7 +468,7 @@ def extract_features2(url):
         'nb_hyperlinks': 0, 'ratio_intHyperlinks': 0, 'ratio_extHyperlinks': 0, 'ratio_nullHyperlinks': 0,
         'nb_extCSS': 0, 'ratio_intMedia': 0, 'ratio_extMedia': 0, 'sfh': 0, 'login_form': 0, 'iframe': 0,
         'popup_window': 0, 'safe_anchor': 0, 'onmouseover': 0, 'right_clic': 0, 'empty_title': 0,
-        'domain_in_title': 0, 'domain_with_copyright': 0, 'submit_email': 0, 'external_favicon': 0, 'links_in_tags': 0
+         'domain_with_copyright': 0, 'submit_email': 0, 'external_favicon': 0, 'links_in_tags': 0
     })
     # try:
     #     int_redir = [r for r in response.history if hostname in r.url]
@@ -528,4 +528,5 @@ def extract_features2(url):
     features['url_numeric_has_special_chars'] = int(bool(re.search(r'[^a-zA-Z0-9]', url)))
     print(url)
     print(features)
+    print("This is how many features we have",len(features))
     return features    
