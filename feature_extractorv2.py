@@ -22,46 +22,6 @@ def get_domain(url):
     o = urllib.parse.urlsplit(url)
     return o.hostname, tldextract.extract(url).domain, o.path
 
-# def is_URL_accessible(url):
-#     #iurl = url
-#     #parsed = urlparse(url)
-#     #url = parsed.scheme+'://'+parsed.netloc
-#     page = None
-#     try:
-#         page = requests.get(url, timeout=5)   
-#     except:
-#         parsed = urlparse(url)
-#         url = parsed.scheme+'://'+parsed.netloc
-#         if not parsed.netloc.startswith('www'):
-#             url = parsed.scheme+'://www.'+parsed.netloc
-#             try:
-#                 page = requests.get(url, timeout=5)
-#             except:
-#                 page = None
-#                 pass
-#         # if not parsed.netloc.startswith('www'):
-#         #     url = parsed.scheme+'://www.'+parsed.netloc
-#         #     #iurl = iurl.replace('https://', 'https://www.')
-#         #     try:
-#         #         page = requests.get(url)
-#         #     except:        
-#         #         # url = 'http://'+parsed.netloc
-#         #         # iurl = iurl.replace('https://', 'http://')
-#         #         # try:
-#         #         #     page = requests.get(url) 
-#         #         # except:
-#         #         #     if not parsed.netloc.startswith('www'):
-#         #         #         url = parsed.scheme+'://www.'+parsed.netloc
-#         #         #         iurl = iurl.replace('http://', 'http://www.')
-#         #         #         try:
-#         #         #             page = requests.get(url)
-#         #         #         except:
-#         #         #             pass
-#         #         pass 
-#     if page and page.status_code == 200 and page.content not in ["b''", "b' '"]:
-#         return True, url, page
-#     else:
-#         return False, None, None
 
 def is_URL_accessible(url):
     page = None

@@ -39,12 +39,6 @@ def predict():
             return jsonify({'error': 'No URL provided'})
         feature_dictionary = extract_features(url)
         #convert the feature dictionary to a list to be safe 
-
-
-        missing_features = [feature for feature in model_order if feature not in feature_dictionary]
-        if missing_features:
-            return jsonify({'error': f'Missing features: {missing_features}'})
-
         feature_list = [feature_dictionary[feature] for feature in model_order]
         
 
@@ -71,4 +65,3 @@ def predict():
 # Run the app
 if __name__ == "__main__":
     app.run(debug=True)  
-
