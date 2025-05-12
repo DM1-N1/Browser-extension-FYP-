@@ -9,9 +9,7 @@ from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 from collections import Counter
 from statistics import mean
-import content_features as ctnfe
-import url_features as urlfe
-import external_features as trdfe
+
 
 def extract_features(url):
     features = {}
@@ -23,7 +21,11 @@ def extract_features(url):
     query = parsed.query or ''
     features['length_url'] = len(url)
     features['length_hostname'] = len(hostname)
-    features['ip'] = urlfe.having_ip_address(url)
+    try:
+        ipaddress.ip_address(hostname)
+        features['ip'] = 1
+    except:
+        features['ip'] = 0
     features['nb_dots'] = url.count('.')
     features['nb_hyphens'] = url.count('-')
     features['nb_at'] = url.count('@')
@@ -43,9 +45,9 @@ def extract_features(url):
     features['nb_space'] = url.count(' ')
     features['nb_www'] = url.count('www')
     features['nb_com'] = url.count('.com')
-    features['nb_dslash'] =  urlfe.count_double_slash(url)
+    # features['nb_dslash'] = url.count('//')
     features['http_in_path'] = int('http' in path)
-    features['https_token'] = urlfe.https_token(scheme)
+    # features['https_token'] = int('https' in url)
     digits_url = sum(c.isdigit() for c in url)
     features['ratio_digits_url'] = digits_url / len(url) if len(url) > 0 else 0
     digits_host = sum(c.isdigit() for c in hostname)
@@ -57,7 +59,7 @@ def extract_features(url):
     subdomain = hostname.replace(parsed.hostname.split('.')[-2] + '.' + parsed.hostname.split('.')[-1], '')
     features['tld_in_subdomain'] = int(any(tld in subdomain for tld in tlds))
     features['abnormal_subdomain'] = int(re.search(r'[^a-zA-Z0-9.-]', subdomain) is not None)
-    features['nb_subdomains'] = urlfe.count_subdomain(url)
+    # features['nb_subdomains'] = subdomain.count('.') if subdomain else 0
     features['prefix_suffix'] = int('-' in hostname)
     def shannon_entropy(data):
         if not data:
@@ -80,23 +82,22 @@ def extract_features(url):
         features['nb_redirection'] = 0
         features['nb_external_redirection'] = 0
     words_raw = re.findall(r'\w+', url)
-    features['length_words_raw'] = len(words_raw)
+    # features['length_words_raw'] = len(words_raw)
     char_count = Counter(url)
-    features['char_repeat'] = sum(1 for count in char_count.values() if count > 1)
+    # features['char_repeat'] = sum(1 for count in char_count.values() if count > 1)
     host_words = re.findall(r'\w+', hostname)
     path_words = re.findall(r'\w+', path)
     features['shortest_words_raw'] = min((len(w) for w in words_raw), default=0)
-    features['shortest_word_host'] = min((len(w) for w in host_words), default=0)
+    # features['shortest_word_host'] = min((len(w) for w in host_words), default=0)
     features['shortest_word_path'] = min((len(w) for w in path_words), default=0)
     features['longest_words_raw'] = max((len(w) for w in words_raw), default=0)
     features['longest_word_host'] = max((len(w) for w in host_words), default=0)
     features['longest_word_path'] = max((len(w) for w in path_words), default=0)
-    features['avg_words_raw'] = mean((len(w) for w in words_raw)) if words_raw else 0
-    features['avg_word_host'] = mean((len(w) for w in host_words)) if host_words else 0
+    # features['avg_words_raw'] = mean((len(w) for w in words_raw)) if words_raw else 0
+    # features['avg_word_host'] = mean((len(w) for w in host_words)) if host_words else 0
     features['avg_word_path'] = mean((len(w) for w in path_words)) if path_words else 0
     suspicious_patterns = ['@', '%', 'http://', 'https://']
-    # features['phish_hints'] = int(any(pattern in url for pattern in suspicious_patterns))
-    features['phish_hints'] = urlfe.phish_hints(url)
+    features['phish_hints'] = int(any(pattern in url for pattern in suspicious_patterns))
     brand_keywords = ['paypal', 'bank', 'login', 'secure']
     features['domain_in_brand'] = int(any(brand in hostname for brand in brand_keywords))
     features['brand_in_subdomain'] = int(any(brand in subdomain for brand in brand_keywords))
@@ -133,7 +134,7 @@ def extract_features(url):
         features['onmouseover'] = int('onmouseover' in response.text)
         features['right_clic'] = int('contextmenu' in response.text)
         features['empty_title'] = int(not soup.title or not soup.title.string.strip())
-        features['domain_in_title'] = int(hostname in (soup.title.string if soup.title else ''))
+        # features['domain_in_title'] = int(hostname in (soup.title.string if soup.title else ''))
         features['domain_with_copyright'] = int('copyright' in response.text.lower())
         features['submit_email'] = int(bool(re.search(r'mailto:', response.text)))
         features['external_favicon'] = int(any(hostname not in link.get('href', '') for link in soup.find_all('link', rel='icon')))
@@ -160,39 +161,37 @@ def extract_features(url):
     except:
         features['ratio_intErrors'] = 0
         features['ratio_extErrors'] = 0
-    try:
-        domain_info = whois.whois(hostname)
-        features['whois_registered_domain'] = int(domain_info.domain_name is not None)
-        if domain_info.creation_date and domain_info.expiration_date:
-            creation = domain_info.creation_date
-            expiration = domain_info.expiration_date
-            if isinstance(creation, list): creation = creation[0]
-            if isinstance(expiration, list): expiration = expiration[0]
-            features['domain_registration_length'] = (expiration - creation).days
-            features['domain_age'] = (datetime.datetime.now() - creation).days
-        else:
-            features['domain_registration_length'] = 0
-            features['domain_age'] = 0
-    except:
-        features['whois_registered_domain'] = 0
-        features['domain_registration_length'] = 0
-        features['domain_age'] = 0
+    # try:
+    #     domain_info = whois.whois(hostname)
+    #     features['whois_registered_domain'] = int(domain_info.domain_name is not None)
+    #     if domain_info.creation_date and domain_info.expiration_date:
+    #         creation = domain_info.creation_date
+    #         expiration = domain_info.expiration_date
+    #         if isinstance(creation, list): creation = creation[0]
+    #         if isinstance(expiration, list): expiration = expiration[0]
+    #         features['domain_registration_length'] = (expiration - creation).days
+    #         features['domain_age'] = (datetime.datetime.now() - creation).days
+    #     else:
+    #         features['domain_registration_length'] = 0
+    #         features['domain_age'] = 0
+    # except:
+    #     features['whois_registered_domain'] = 0
+    #     features['domain_registration_length'] = 0
+    #     features['domain_age'] = 0
     # features['web_traffic'] = 0
-    features['web_traffic'] = trdfe.web_traffic(url)
-    try:
-        features['dns_record'] = int(bool(socket.gethostbyname(hostname)) if hostname else 0)
-    except socket.gaierror:
-        features['dns_record'] = 0
-    # features['google_index'] = 0
-    features['google_index'] = trdfe.google_index(url)
+    # try:
+    #     features['dns_record'] = int(bool(socket.gethostbyname(hostname)) if hostname else 0)
+    # except socket.gaierror:
+    #     features['dns_record'] = 0
+    features['google_index'] = 0
     features['page_rank'] = 0
     features['url_numeric_domain'] = int(bool(re.search(r'\d', hostname)))
     features['url_numeric_path_length'] = sum(c.isdigit() for c in path)
     features['url_numeric_num_subdomains'] = hostname.count('.') - 1
     features['url_numeric_has_ip'] = features['ip']
     features['url_numeric_has_special_chars'] = int(bool(re.search(r'[^a-zA-Z0-9]', url)))
-    # print(url)
-    # print(features)
+    print(url)
+    print(features)
     return features
 
 # Ask wether to have path extension as always 0 or suttin else
