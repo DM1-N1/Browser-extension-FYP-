@@ -3,7 +3,7 @@
 # Was very hard for me to understand but I got there in the end 
 import joblib
 from flask import Flask, request, jsonify
-from feature_extractorv2 import extract_features
+from feature_extractor import extract_features
 
 # order of features used in the model 
 model_order = [
@@ -39,6 +39,12 @@ def predict():
             return jsonify({'error': 'No URL provided'})
         feature_dictionary = extract_features(url)
         #convert the feature dictionary to a list to be safe 
+
+
+        missing_features = [feature for feature in model_order if feature not in feature_dictionary]
+        if missing_features:
+            return jsonify({'error': f'Missing features: {missing_features}'})
+
         feature_list = [feature_dictionary[feature] for feature in model_order]
         
 

@@ -316,7 +316,7 @@ def extract_data_from_URL(hostname, content, domain, Href, Link, Anchor, Media, 
 #################################################################################################################################
 
 
-def extract_features(url):
+def extract_features2(url):
 
     def words_raw_extraction(domain, subdomain, path):
         w_domain = re.split("\-|\.|\/|\?|\=|\@|\&|\%|\:|\_", domain.lower())
@@ -366,7 +366,6 @@ def extract_features(url):
     scheme = parsed.scheme or ''
     query = parsed.query or ''
 
-    print("Okkkkkayyy gwarrrrn")
     features['length_url'] = len(url)
     features['length_hostname'] = len(hostname)
     features['ip'] = urlfe.having_ip_address(url)
