@@ -27,22 +27,22 @@ phish_hints - done - not just a conversion to int but a count based on a list
 
 
 page_rank - key not provided maybe find work around
-length_words_raw 
-avg_words_raw
-avg_word_host
-shortest_word_host
-char_repeat
-nb_hyperlinks
-ratio_intHyperlinks
-ratio_extHyperlinks
-iframe
-safe_anchor
-onmouseover
-domain_with_copyright
-external_favicon
-ratio_extErrors
-domain_registration_length
-domain_age
-dns_record
+length_words_raw - Done
+avg_words_raw - Done
+avg_word_host - Done
+shortest_word_host - Done 
+char_repeat - Done 
+nb_hyperlinks - Done 
+ratio_intHyperlinks - Done 
+ratio_extHyperlinks - Done 
+iframe - Done
+safe_anchor - Done
+onmouseover - Done 
+domain_with_copyright - Done 
+external_favicon - Done
+ratio_extErrors - Done 
+domain_registration_length - Done 
+domain_age - Done 
+dns_record - done
 google_index 
 web_traffic 
