@@ -29,7 +29,7 @@ dataset_with_url = pd.read_csv('N:\Browser-extension-FYP- - Copy\datasets\datase
 # try:
 #     original_dataset.drop(columns=['url'], inplace=True) 
 #     print("Url column dropped")
-#     original_dataset.to_csv('/workspaces/Browser-extension-FYP-/dataset_no_url_.csv', index=False)
+#     original_dataset.to_csv('N:\Browser-extension-FYP- - Copy\datasets\dataset_no_url_.csv', index=False)
 #     print("Updated dataset saved to 'dataset_no_url.csv'")
 # except:
 #     print("Column has already been dropped")
@@ -95,19 +95,18 @@ dataset_with_url = pd.read_csv('N:\Browser-extension-FYP- - Copy\datasets\datase
 # #Drop columns based on comparison            
 
 # columns_to_drop = ['url_numeric_uses_https']
-# dataset.drop(columns=columns_to_drop, inplace=True)
+# original_dataset.drop(columns=columns_to_drop, inplace=True)
 # print("Column dropped")
 # # # Save the cleaned dataset
-# dataset.to_csv("updated.csv", index=False)
+# original_dataset.to_csv("updated.csv", index=False)
 # print("Dataset saved")
 
 # # STEP 3
 # dataset_no_url['status'] = dataset_no_url['status'].map({'legitimate': 0, 'phishing': 1})
-# dataset_no_url.to_csv('/workspaces/Browser-extension-FYP-/dataset_no_url.csv', index=False)
+# dataset_no_url.to_csv('N:\Browser-extension-FYP- - Copy\datasets\dataset_no_url.csv', index=False)
 
 # dataset_with_url['status'] = dataset_with_url['status'].map({'legitimate': 0, 'phishing': 1})
-# dataset_with_url.to_csv('/workspaces/Browser-extension-FYP-/dataset_with_url.csv', index=False)
-
+# dataset_with_url.to_csv('N:\Browser-extension-FYP- - Copy\datasets\dataset_with_url.csv', index=False)
 
 # List of columns to drop
 columns_to_remove = [
@@ -117,16 +116,7 @@ columns_to_remove = [
     'domain_registration_length', 'domain_age', 'web_traffic'
 ]
 
-# Drop specified columns from dataset_no_url
-columns_to_remove_no_url = [col for col in columns_to_remove if col in dataset_no_url.columns]
-dataset_no_url.drop(columns=columns_to_remove_no_url, inplace=True)
-dataset_no_url['status'] = dataset_no_url['status'].map({'legitimate': 0, 'phishing': 1})
-dataset_no_url.to_csv('N:\Browser-extension-FYP- - Copy\datasets\dataset_no_url.csv', index=False)
-print(f"Updated dataset_no_url saved to 'N:\Browser-extension-FYP- - Copy\datasets\dataset_no_url.csv'. Columns removed: {columns_to_remove_no_url}")
-
-# Drop specified columns from dataset_with_url
 columns_to_remove_with_url = [col for col in columns_to_remove if col in dataset_with_url.columns]
 dataset_with_url.drop(columns=columns_to_remove_with_url, inplace=True)
-dataset_with_url['status'] = dataset_with_url['status'].map({'legitimate': 0, 'phishing': 1})
 dataset_with_url.to_csv('N:\Browser-extension-FYP- - Copy\datasets\dataset_with_url.csv', index=False)
-print(f"Updated dataset_with_url saved to '/workspaces/Browser-extension-FYP-/dataset_with_url.csv'. Columns removed: {columns_to_remove_with_url}")
+print(f"Updated dataset_with_url saved to 'N:\\Browser-extension-FYP- - Copy\\datasets\\dataset_with_url.csv'. Columns removed: {columns_to_remove_with_url}")

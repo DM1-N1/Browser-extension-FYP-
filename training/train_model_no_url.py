@@ -8,7 +8,7 @@ from sklearn.metrics import classification_report, confusion_matrix, accuracy_sc
 import joblib
 
 
-dataset_no_url = pd.read_csv('/workspaces/Browser-extension-FYP-/datasets/dataset_no_url.csv')
+dataset_no_url = pd.read_csv('N:\Browser-extension-FYP- - Copy\datasets\dataset_no_url.csv')
 # x is the features only hecnce why we drop the target/classifier column status 
 x = dataset_no_url.drop(columns=['status'])
 # y is the target/classifier column status
