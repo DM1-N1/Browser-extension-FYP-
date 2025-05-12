@@ -1,9 +1,10 @@
+
 # This code creates a server using for flask which listens for post requests on the /predict route. 
 # When a request is received, it calls the predict function and returns the prediction as a JSON response.
 # Was very hard for me to understand but I got there in the end 
 import joblib
 from flask import Flask, request, jsonify
-from feature_extractorv2 import extract_features
+from feature_extractor import extract_features
 
 # order of features used in the model 
 model_order = [
@@ -67,4 +68,3 @@ def predict():
 # Run the app
 if __name__ == "__main__":
     app.run(debug=True)  
-
