@@ -299,7 +299,7 @@ def extract_data_from_URL(hostname, content, domain, Href, Link, Anchor, Media, 
 
 
 def extract_features(url):
-    
+    print("The start")
     def words_raw_extraction(domain, subdomain, path):
         w_domain = re.split("\-|\.|\/|\?|\=|\@|\&|\%|\:|\_", domain.lower())
         w_subdomain = re.split("\-|\.|\/|\?|\=|\@|\&|\%|\:|\_", subdomain.lower())   
@@ -316,7 +316,7 @@ def extract_features(url):
         else:
             content = None
 
-    
+    print("Got past the 1st 2 functions")
     Href = {'internals':[], 'externals':[], 'null':[]}
     Link = {'internals':[], 'externals':[], 'null':[]}
     Anchor = {'safe':[], 'unsafe':[], 'null':[]}
@@ -349,6 +349,8 @@ def extract_features(url):
     netloc = parsed.netloc or ''
     scheme = parsed.scheme or ''
     query = parsed.query or ''
+
+    print("Okkkkkayyy gwarrrrn")
     features['length_url'] = len(url)
     features['length_hostname'] = len(hostname)
     features['ip'] = urlfe.having_ip_address(url)
