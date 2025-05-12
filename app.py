@@ -38,6 +38,7 @@ def predict():
         if not url:
             return jsonify({'error': 'No URL provided'})
         feature_dictionary = extract_features(url)
+        print("This is how many features we expected",len(model_order))
         #convert the feature dictionary to a list to be safe 
         feature_list = [feature_dictionary[feature] for feature in model_order]
         
