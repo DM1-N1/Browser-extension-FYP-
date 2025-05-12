@@ -8,19 +8,30 @@ Refactor and organise code
 Make it so flask runs automatically once all of the above are done.
 
 
+Ask about the code where you got feature extraction from 
+Ask about open page rank since they used a api/key generated for a set amount of sites 
+Ask about where i editied it to suit my code e.g the random domain function and getting rid of the hostname 
+
+
 # DISSOTATION NEEDS DOING ASAP 
 
 #Mismatched values
-ip
-nb_dslash
-https_token
-nb_subdomains
-length_words_raw
-char_repeat
-shortest_word_host
+ip - done 
+nb_dslash - done - issue was it was 1 or 0 not count 
+https_token - done - it was 1 or 0 not just a int conversions
+nb_subdomains - done - options were 1 2 0r 3 not just a count 
+phish_hints - done - not just a conversion to int but a count based on a list 
+
+
+
+
+
+page_rank - key not provided maybe find work around
+length_words_raw 
 avg_words_raw
 avg_word_host
-phish_hints
+shortest_word_host
+char_repeat
 nb_hyperlinks
 ratio_intHyperlinks
 ratio_extHyperlinks
@@ -32,7 +43,6 @@ external_favicon
 ratio_extErrors
 domain_registration_length
 domain_age
-google_index
-page_rank
-web_traffic
 dns_record
+google_index 
+web_traffic 
