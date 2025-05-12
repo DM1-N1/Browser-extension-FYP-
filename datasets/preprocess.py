@@ -117,6 +117,6 @@ columns_to_remove = [
 ]
 
 columns_to_remove_with_url = [col for col in columns_to_remove if col in dataset_with_url.columns]
-dataset_with_url.drop(columns=columns_to_remove_with_url, inplace=True)
-dataset_with_url.to_csv('N:\Browser-extension-FYP- - Copy\datasets\dataset_with_url.csv', index=False)
+dataset_no_url.drop(columns=columns_to_remove_with_url, inplace=True)
+dataset_no_url.to_csv('N:\Browser-extension-FYP- - Copy\datasets\dataset_with_url.csv', index=False)
 print(f"Updated dataset_with_url saved to 'N:\\Browser-extension-FYP- - Copy\\datasets\\dataset_with_url.csv'. Columns removed: {columns_to_remove_with_url}")
