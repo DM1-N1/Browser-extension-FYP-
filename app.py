@@ -3,7 +3,7 @@
 # Was very hard for me to understand but I got there in the end 
 import joblib
 from flask import Flask, request, jsonify
-from feature_extractor import extract_features
+from feature_extractorv2 import extract_features
 
 # order of features used in the model 
 model_order = [

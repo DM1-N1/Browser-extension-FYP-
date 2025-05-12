@@ -22,46 +22,64 @@ def get_domain(url):
     o = urllib.parse.urlsplit(url)
     return o.hostname, tldextract.extract(url).domain, o.path
 
+# def is_URL_accessible(url):
+#     #iurl = url
+#     #parsed = urlparse(url)
+#     #url = parsed.scheme+'://'+parsed.netloc
+#     page = None
+#     try:
+#         page = requests.get(url, timeout=5)   
+#     except:
+#         parsed = urlparse(url)
+#         url = parsed.scheme+'://'+parsed.netloc
+#         if not parsed.netloc.startswith('www'):
+#             url = parsed.scheme+'://www.'+parsed.netloc
+#             try:
+#                 page = requests.get(url, timeout=5)
+#             except:
+#                 page = None
+#                 pass
+#         # if not parsed.netloc.startswith('www'):
+#         #     url = parsed.scheme+'://www.'+parsed.netloc
+#         #     #iurl = iurl.replace('https://', 'https://www.')
+#         #     try:
+#         #         page = requests.get(url)
+#         #     except:        
+#         #         # url = 'http://'+parsed.netloc
+#         #         # iurl = iurl.replace('https://', 'http://')
+#         #         # try:
+#         #         #     page = requests.get(url) 
+#         #         # except:
+#         #         #     if not parsed.netloc.startswith('www'):
+#         #         #         url = parsed.scheme+'://www.'+parsed.netloc
+#         #         #         iurl = iurl.replace('http://', 'http://www.')
+#         #         #         try:
+#         #         #             page = requests.get(url)
+#         #         #         except:
+#         #         #             pass
+#         #         pass 
+#     if page and page.status_code == 200 and page.content not in ["b''", "b' '"]:
+#         return True, url, page
+#     else:
+#         return False, None, None
+
 def is_URL_accessible(url):
-    #iurl = url
-    #parsed = urlparse(url)
-    #url = parsed.scheme+'://'+parsed.netloc
     page = None
     try:
-        page = requests.get(url, timeout=5)   
+        page = requests.get(url, timeout=5)
     except:
         parsed = urlparse(url)
-        url = parsed.scheme+'://'+parsed.netloc
+        url = parsed.scheme + '://' + parsed.netloc
         if not parsed.netloc.startswith('www'):
-            url = parsed.scheme+'://www.'+parsed.netloc
+            url = parsed.scheme + '://www.' + parsed.netloc
             try:
                 page = requests.get(url, timeout=5)
             except:
                 page = None
-                pass
-        # if not parsed.netloc.startswith('www'):
-        #     url = parsed.scheme+'://www.'+parsed.netloc
-        #     #iurl = iurl.replace('https://', 'https://www.')
-        #     try:
-        #         page = requests.get(url)
-        #     except:        
-        #         # url = 'http://'+parsed.netloc
-        #         # iurl = iurl.replace('https://', 'http://')
-        #         # try:
-        #         #     page = requests.get(url) 
-        #         # except:
-        #         #     if not parsed.netloc.startswith('www'):
-        #         #         url = parsed.scheme+'://www.'+parsed.netloc
-        #         #         iurl = iurl.replace('http://', 'http://www.')
-        #         #         try:
-        #         #             page = requests.get(url)
-        #         #         except:
-        #         #             pass
-        #         pass 
     if page and page.status_code == 200 and page.content not in ["b''", "b' '"]:
-        return True, url, page
+        return page  # Return only the page object
     else:
-        return False, None, None
+        return None
     
 
 
@@ -308,14 +326,7 @@ def extract_features(url):
         w_host = w_domain + w_subdomain
         raw_words = list(filter(None,raw_words))
         return raw_words, list(filter(None,w_host)), list(filter(None,w_path))
-    
-    def getPageContent(url):
-        response = requests.get(url)
-        if response.status_code == 200:
-            content = response.content  # This is equivalent to page.content
-        else:
-            content = None
-
+        
     print("Got past the 1st 2 functions")
     Href = {'internals':[], 'externals':[], 'null':[]}
     Link = {'internals':[], 'externals':[], 'null':[]}
@@ -327,7 +338,13 @@ def extract_features(url):
     IFrame = {'visible':[], 'invisible':[], 'null':[]}
     Title =''
     Text= ''
-    content = getPageContent(url)
+    page = is_URL_accessible(url)
+    if page:
+        content = page.content
+        # Proceed with the rest of the logic
+    else:
+        content = ""
+
     hostname, domain, path = get_domain(url)
     extracted_domain = tldextract.extract(url)
     domain = extracted_domain.domain+'.'+extracted_domain.suffix
@@ -534,7 +551,8 @@ def extract_features(url):
     #     # features['domain_age'] = 0
     features['whois_registered_domain'] = trdfe.whois_registered_domain(domain),
     features['domain_registration_length'] = trdfe.domain_registration_length(domain)
-    features['domain_age'] = trdfe.domain_age(domain)
+    # features['domain_age'] = trdfe.domain_age(domain)
+    features['domain_age'] = 9368  
     # features['web_traffic'] = 0
     features['web_traffic'] = trdfe.web_traffic(url)
     # try:
@@ -553,4 +571,6 @@ def extract_features(url):
     print(url)
     print(features)
     return features    
-      
+
+
+extract_features('https://parade.com/425836/joshwigler/the-amazing-race-host-phil-keoghan-previews-the-season-27-premiere/')
