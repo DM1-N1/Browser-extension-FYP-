@@ -66,4 +66,4 @@ print("Classification Report:\n", classification_report(y_test, y_pred))
 joblib.dump(scaler, "deep_scaler.pkl")  # Save the scaler for later use in prediction
 
 # Save the trained deep learning model in .keras format (recommended format for TensorFlow models)
-model.save("deepleanr_mopdel.keras")
+model.save("deeplearn.keras")  # Save the model in Keras format
