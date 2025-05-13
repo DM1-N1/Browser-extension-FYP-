@@ -63,11 +63,11 @@ def external_hyperlinks(Href, Link, Media, Form, CSS, Favicon):
 def h_null(hostname, Href, Link, Media, Form, CSS, Favicon):
     return len(Href['null']) + len(Link['null']) + len(Media['null']) + len(Form['null']) + len(CSS['null']) + len(Favicon['null'])
 
-def null_hyperlinks(Href, Link, Media, Form, CSS, Favicon):  #edited for me
+def null_hyperlinks(hostname, Href, Link, Media, Form, CSS, Favicon):
     total = h_total(Href, Link, Media, Form, CSS, Favicon)
     if total==0:
         return 0
-    return h_null(Href, Link, Media, Form, CSS, Favicon)/total # edited for me
+    return h_null(hostname, Href, Link, Media, Form, CSS, Favicon)/total
 
 #################################################################################################################################
 #               Extrenal CSS (Kumar Jain'18)
@@ -408,7 +408,7 @@ def links_in_tags(Link):
 #              Server Form Handler  : sfh in Zaini'2019
 #################################################################################################################################
 
-def sfh(Form):  #edited for me
+def sfh(hostname, Form):
     if len(Form['null'])>0:
         return 1
     return 0

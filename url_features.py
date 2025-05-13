@@ -7,7 +7,7 @@ import re
 #LOCALHOST_PATH = "/var/www/html/"
 HINTS = ['wp', 'login', 'includes', 'admin', 'content', 'site', 'images', 'js', 'alibaba', 'css', 'myaccount', 'dropbox', 'themes', 'plugins', 'signin', 'view']
 
-allbrand_txt = open("allbrands.txt", "r")
+allbrand_txt = open("data/allbrands.txt", "r")
 
 def __txt_to_list(txt_object):
     list = []
@@ -316,38 +316,11 @@ def count_external_redirection(page, domain):
 #               Is the registered domain created with random characters (Sahingoz2019)
 #################################################################################################################################
 
-# from word_with_nlp import nlp_class
-
-# def random_domain(domain):
-#         nlp_manager = nlp_class()
-#         return nlp_manager.check_word_random(domain)
-#edited for me 
-
-import re
-
-# List of common English words or brand names
-common_words = [
-    "google", "facebook", "amazon", "microsoft", "apple", "twitter", "instagram", "linkedin", "netflix", "paypal"
-]
+from word_with_nlp import nlp_class
 
 def random_domain(domain):
-    # Check if the domain contains a high ratio of consonants
-    vowels = "aeiou"
-    consonants = "".join([char for char in domain if char.isalpha() and char not in vowels])
-    if len(consonants) / len(domain) > 0.7:  # More than 70% consonants
-        return 1
-
-    # Check if the domain contains any common words
-    for word in common_words:
-        if word in domain.lower():
-            return 0  # Not random if it contains a common word
-
-    # Check if the domain length is unusual
-    if len(domain) < 5 or len(domain) > 20:
-        return 1
-
-    # If none of the above checks pass, consider it random
-    return 1
+        nlp_manager = nlp_class()
+        return nlp_manager.check_word_random(domain)
     
 #################################################################################################################################
 #               Consecutive Character Repeat (Sahingoz2019)

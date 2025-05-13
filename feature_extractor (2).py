@@ -1,12 +1,26 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Thu May 14 13:23:31 2020
+
+@author: hannousse
+"""
+
 import content_features as ctnfe
 import url_features as urlfe
 import external_features as trdfe
+import ml_models as models
 import pandas as pd 
 import urllib.parse
 import tldextract
 import requests
+import json
+import csv
+import os
 import re
 
+
+from pandas2arff import pandas2arff
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 
@@ -447,7 +461,7 @@ def extract_features(url, status):
                  ctnfe.internal_media(Media),
                  ctnfe.external_media(Media),
                #  # additional content-based features
-                 ctnfe.sfh(Form), # edited for me
+                 ctnfe.sfh(hostname,Form),
                  ctnfe.iframe(IFrame),
                  ctnfe.popup_window(Text),
                  ctnfe.safe_anchor(Anchor),
@@ -584,7 +598,7 @@ def extract_hyperlinks_features(Href, Link, Media, Form, CSS, Favicon):
                  ctnfe.nb_hyperlinks(Href, Link, Media, Form, CSS, Favicon),
                  ctnfe.internal_hyperlinks(Href, Link, Media, Form, CSS, Favicon),
                  ctnfe.external_hyperlinks(Href, Link, Media, Form, CSS, Favicon),
-                 ctnfe.null_hyperlinks(Href, Link, Media, Form, CSS, Favicon),
+                 ctnfe.null_hyperlinks(hostname, Href, Link, Media, Form, CSS, Favicon),
                  ctnfe.external_css(CSS),
                  ctnfe.internal_redirection(Href, Link, Media, Form, CSS, Favicon),
                  ctnfe.external_redirection(Href, Link, Media, Form, CSS, Favicon),
@@ -611,7 +625,7 @@ def extract_abnormelness_features(Form, IFrame, Anchor, Text, Title, extracted_d
                  ctnfe.submitting_to_email(Form),
                  
                
-                 ctnfe.sfh(Form), # edited for me
+                 ctnfe.sfh(hostname,Form),
                  ctnfe.iframe(IFrame),
                  ctnfe.popup_window(Text),
                  ctnfe.safe_anchor(Anchor),
@@ -841,5 +855,225 @@ tpt_headers = [
 
 
 
+l_models = ['Random Forest', 
+                'SVM', #'XGBoost', 
+                'Logistic Regression', 
+                'Decision Tree', 
+                'KNeighbors', 
+                'SGD',
+                'Gaussian Naive Bayes', 
+                'MLP'
+            ]
 
 headers = url_headers + ctn_headers + tpt_headers
+
+#################################################################################################################################
+#              Generate datasets
+#################################################################################################################################
+
+
+def generate_external_dataset(header):
+    db = pd.read_csv('data/dataset_A.csv')
+    lst = list(db['url'])
+    lst = list(set(lst))
+
+    dataset = pd.read_csv(file+'.csv')
+    i = 0 
+    nb = 0
+    if not os.path.isfile('dataset_B.csv') :
+        with open('dataset_B.csv', 'w') as csvfile :
+            writer = csv.writer(csvfile)
+            writer.writerow(['url']+header+['status'])
+            csvfile.close()
+    else:
+        i= 0
+        nb = len(lst)
+    for index, row in dataset.iterrows():
+        #url = 'https://'+row['domain']
+        url = row['URL']
+        status = row['status']
+        # if row['label'] == 0:
+        #     status = 'legitimate'
+        # else:
+        #     status = 'phishing'
+        if url not in lst:
+            try:
+                res = extract_features(url, status)
+            except:
+                res = None
+                pass
+        
+            if res!=None:
+                with open(file+'_dataset.csv', 'a') as csvfile :
+                    writer = csv.writer(csvfile)
+                    writer.writerow(res)
+                    csvfile.close()
+                state = 'Ok'
+                lst.append(url)
+                nb +=1
+            else:
+                state = 'Er'
+        else:
+           state = 'Fn' 
+        i+=1
+        print('[',state,']',nb,'succeded from:',i)
+
+import time
+
+def generate_dataset_iu1():
+    
+    def words_raw_extraction(domain, subdomain, path):
+        w_domain = re.split("\-|\.|\/|\?|\=|\@|\&|\%|\:|\_", domain.lower())
+        w_subdomain = re.split("\-|\.|\/|\?|\=|\@|\&|\%|\:|\_", subdomain.lower())   
+        w_path = re.split("\-|\.|\/|\?|\=|\@|\&|\%|\:|\_", path.lower())
+        raw_words = w_domain + w_path + w_subdomain
+        w_host = w_domain + w_subdomain
+        raw_words = list(filter(None,raw_words))
+        return raw_words, list(filter(None,w_host)), list(filter(None,w_path))
+
+    db = pd.read_csv('data/dataset_A.csv')
+    lst = list(db['url'])
+    lst = list(set(lst))
+
+    
+    
+    times = []
+
+    
+    for url in lst:
+        
+        hostname, domain, path = get_domain(url)
+        extracted_domain = tldextract.extract(url)
+        domain = extracted_domain.domain+'.'+extracted_domain.suffix
+        subdomain = extracted_domain.subdomain
+        tmp = url[url.find(extracted_domain.suffix):len(url)]
+        pth = tmp.partition("/")
+        path = pth[1] + pth[2]
+        words_raw, words_raw_host, words_raw_path= words_raw_extraction(extracted_domain.domain, subdomain, pth[2])
+        tld = extracted_domain.suffix
+        parsed = urlparse(url)
+        scheme = parsed.scheme
+        
+        start = time.time()
+        res = extract_Structural_features(url, scheme, domain, subdomain, extracted_domain, tld, path)
+        end = time.time()
+        times.append(end-start)
+        
+           
+    print(len(times),':',sum(times) / len(times))
+
+
+def generate_dataset_iu2():
+    
+    def words_raw_extraction(domain, subdomain, path):
+        w_domain = re.split("\-|\.|\/|\?|\=|\@|\&|\%|\:|\_", domain.lower())
+        w_subdomain = re.split("\-|\.|\/|\?|\=|\@|\&|\%|\:|\_", subdomain.lower())   
+        w_path = re.split("\-|\.|\/|\?|\=|\@|\&|\%|\:|\_", path.lower())
+        raw_words = w_domain + w_path + w_subdomain
+        w_host = w_domain + w_subdomain
+        raw_words = list(filter(None,raw_words))
+        return raw_words, list(filter(None,w_host)), list(filter(None,w_path))
+
+    db = pd.read_csv('data/dataset_A.csv')
+    lst = list(db['url'])
+    times = []
+    nb = 0
+    i=0
+    for url in lst:
+        try:
+            state, iurl, page = is_URL_accessible(url)
+            if state:
+                hostname, domain, path = get_domain(url)
+                extracted_domain = tldextract.extract(url)
+                domain = extracted_domain.domain+'.'+extracted_domain.suffix
+                subdomain = extracted_domain.subdomain
+                tmp = url[url.find(extracted_domain.suffix):len(url)]
+                pth = tmp.partition("/")
+                path = pth[1] + pth[2]
+                words_raw, words_raw_host, words_raw_path= words_raw_extraction(extracted_domain.domain, subdomain, pth[2])
+                tld = extracted_domain.suffix
+                parsed = urlparse(url)
+                scheme = parsed.scheme
+                
+                start = time.time()
+                res = extract_Statistical_features(url, page, hostname, domain, path, words_raw, words_raw_host, words_raw_path)
+                end = time.time()
+                times.append(end-start)
+                nb +=1
+        except:
+            pass
+        i+=1
+        print(i,':', nb)
+           
+    print(len(times),':',sum(times) / len(times))
+
+
+
+def generate_dataset_ic1():
+ 
+    db = pd.read_csv('data/dataset_A.csv')
+    lst = list(db['url'])
+    times = []
+    Href = {'internals':[], 'externals':[], 'null':[]}
+    Link = {'internals':[], 'externals':[], 'null':[]}
+    Anchor = {'safe':[], 'unsafe':[], 'null':[]}
+    Media = {'internals':[], 'externals':[], 'null':[]}
+    Form = {'internals':[], 'externals':[], 'null':[]}
+    CSS = {'internals':[], 'externals':[], 'null':[]}
+    Favicon = {'internals':[], 'externals':[], 'null':[]}
+    IFrame = {'visible':[], 'invisible':[], 'null':[]}
+    
+    nb = 0
+    i=0
+    for url in lst:
+        state, iurl, page = is_URL_accessible(url)
+        if state:
+            content = page.content
+            hostname, domain, path = get_domain(url)
+            extracted_domain = tldextract.extract(url)
+            content = page.content
+            domain = extracted_domain.domain+'.'+extracted_domain.suffix
+            Href, Link, Anchor, Media, Form, CSS, Favicon, IFrame, Title, Text = extract_data_from_URL(hostname, content, domain, Href, Link, Anchor, Media, Form, CSS, Favicon, IFrame, Title, Text)
+            start = time.time()
+            res = extract_hyperlinks_features(Href, Link, Media, Form, CSS, Favicon)
+            end = time.time()
+            times.append(end-start)
+            nb +=1
+        i+=1
+        print(i,':', nb, ':', times)
+           
+    print(len(times),':',sum(times) / len(times))
+
+
+
+
+def generate_dataset_ic2():
+ 
+    db = pd.read_csv('data/dataset_A.csv')
+    lst = list(db['url'])
+    times = []
+    Title =''
+    Text= ''    
+    nb = 0
+    i=0
+    for url in lst:
+        state, iurl, page = is_URL_accessible(url)
+        if state:
+            content = page.content
+            hostname, domain, path = get_domain(url)
+            extracted_domain = tldextract.extract(url)
+            domain = extracted_domain.domain+'.'+extracted_domain.suffix
+            
+            Href, Link, Anchor, Media, Form, CSS, Favicon, IFrame, Title, Text = extract_data_from_URL(hostname, content, domain, Href, Link, Anchor, Media, Form, CSS, Favicon, IFrame, Title, Text)
+            if state:
+                
+                start = time.time()
+                res = extract_abnormelness_features(Form, IFrame, Anchor, Text, Title, extracted_domain)
+                end = time.time()
+                times.append(end-start)
+                nb +=1
+                
+        i+=1
+        print(i,':', nb, ':', times)
+           
+    print(len(times),':',sum(times) / len(times))
