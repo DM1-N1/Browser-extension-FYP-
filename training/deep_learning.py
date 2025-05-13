@@ -63,7 +63,7 @@ print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
 print("Classification Report:\n", classification_report(y_test, y_pred))
 
 # Save the scaler for later use in prediction
-joblib.dump(scaler, "scaler.pkl")
+joblib.dump(scaler, "deep_scaler.pkl")  # Save the scaler for later use in prediction
 
 # Save the trained deep learning model in .keras format (recommended format for TensorFlow models)
-model.save("ai_model.keras")
+model.save("deepleanr_mopdel.keras")

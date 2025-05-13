@@ -35,26 +35,37 @@ dataset_with_url = pd.read_csv('datasets\dataset_with_url.csv')
 # print("Dropped URL column from dataset_no_url.")
 
 #STEP 3
-def extract_url_features(url):
-    parsed = urlparse(url)
-    return {
-        'url_numeric_domain': parsed.netloc,
-        'url_numeric_path_length': len(parsed.path),
-        'url_numeric_num_subdomains': parsed.netloc.count('.') - 1,
-        'url_numeric_has_ip': int(any(char.isdigit() for char in parsed.netloc)),
-        'url_numeric_has_special_chars': int(any(char in parsed.path for char in ['@', '-', '=']))
-    }
+# def extract_url_features(url):
+#     parsed = urlparse(url)
+#     return {
+#         'url_numeric_domain': parsed.netloc,
+#         'url_numeric_path_length': len(parsed.path),
+#         'url_numeric_num_subdomains': parsed.netloc.count('.') - 1,
+#         'url_numeric_has_ip': int(any(char.isdigit() for char in parsed.netloc)),
+#         'url_numeric_has_special_chars': int(any(char in parsed.path for char in ['@', '-', '=']))
+#     }
 
-# Extract features from URL column
-url_features = dataset_with_url['url'].apply(extract_url_features)
-url_features_df = pd.DataFrame(url_features.tolist())
+# # Extract features from URL column
+# url_features = dataset_with_url['url'].apply(extract_url_features)
+# url_features_df = pd.DataFrame(url_features.tolist())
 
-# Convert domain to numerical values
-url_features_df['url_numeric_domain'] = LabelEncoder().fit_transform(url_features_df['url_numeric_domain'])
+# # Convert domain to numerical values
+# url_features_df['url_numeric_domain'] = LabelEncoder().fit_transform(url_features_df['url_numeric_domain'])
 
-# Merge features back into dataset
-dataset_with_url = pd.concat([dataset_with_url.drop(columns=['url']), url_features_df], axis=1)
+# # Merge features back into dataset
+# dataset_with_url = pd.concat([dataset_with_url.drop(columns=['url']), url_features_df], axis=1)
 
-# Save the updated dataset
+# # Save the updated dataset
+# dataset_with_url.to_csv('datasets\dataset_with_url.csv', index=False)
+# print("URL features extracted and dataset_with_url updated.")
+
+#STEP 4
+# Map 'legitimate' to 0 and 'phishing' to 1 in dataset_no_url
+dataset_no_url['status'] = dataset_no_url['status'].map({'legitimate': 0, 'phishing': 1})
+dataset_no_url.to_csv('datasets\dataset_no_url.csv', index=False)
+print("Mapped and saved dataset_no_url")
+
+# Map 'legitimate' to 0 and 'phishing' to 1 in dataset_with_url
+dataset_with_url['status'] = dataset_with_url['status'].map({'legitimate': 0, 'phishing': 1})
 dataset_with_url.to_csv('datasets\dataset_with_url.csv', index=False)
-print("URL features extracted and dataset_with_url updated.")
+print("Mapped and saved dataset_with_url")
