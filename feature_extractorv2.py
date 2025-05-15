@@ -549,7 +549,13 @@ def extract_features(url):
     #     # features['whois_registered_domain'] = 0
     #     # features['domain_registration_length'] = 0
     #     # features['domain_age'] = 0
-    features['whois_registered_domain'] = trdfe.whois_registered_domain(domain),
+    result = trdfe.whois_registered_domain(domain)
+
+    # If result is a tuple, take the first element
+    # if isinstance(result, tuple):
+    #     features['whois_registered_domain'] = result[0]
+    # else:
+    #     features['whois_registered_domain'] = result
     features['domain_registration_length'] = trdfe.domain_registration_length(domain)
     # features['domain_age'] = trdfe.domain_age(domain)
     features['domain_age'] = 9368  
