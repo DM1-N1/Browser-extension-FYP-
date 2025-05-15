@@ -1,12 +1,23 @@
 # This code creates a server using for flask which listens for post requests on the /predict route. 
 # When a request is received, it calls the predict function and returns the prediction as a JSON response.
 # Was very hard for me to understand but I got there in the end 
-import joblib
-from flask import Flask, request, jsonify
-from feature_extractorv2 import extract_features2
 
-# order of features used in the model 
-model_order = ['length_url', 'length_hostname', 'ip', 'nb_dots', 'nb_hyphens', 'nb_at',
+
+
+
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+import joblib
+from feature_extractor import extract_features
+
+app = Flask(__name__)
+CORS(app)
+
+# Load the traditional ML model
+model = joblib.load("ai_model.pkl")  # Your .pkl file
+
+# Define the expected feature order (must match training)
+feature_order = ['length_url', 'length_hostname', 'ip', 'nb_dots', 'nb_hyphens', 'nb_at',
        'nb_qm', 'nb_and', 'nb_or', 'nb_eq', 'nb_underscore', 'nb_tilde',
        'nb_percent', 'nb_slash', 'nb_star', 'nb_colon', 'nb_comma',
        'nb_semicolumn', 'nb_dollar', 'nb_space', 'nb_www', 'nb_com',
@@ -28,47 +39,30 @@ model_order = ['length_url', 'length_hostname', 'ip', 'nb_dots', 'nb_hyphens', '
        'url_numeric_num_subdomains', 'url_numeric_has_ip',
        'url_numeric_has_special_chars']
 
-model = joblib.load("ai_model.pkl")  
-print(model.n_features_in_)
 
-
-# Initialize Flask app
-app = Flask(__name__)
-
-# Define the prediction route
 @app.route('/predict', methods=['POST'])
 def predict():
+    data = request.get_json()
+    url = data.get("url", "")
+    print("Received data:", data)
+
     try:
-        data = request.get_json(force=True)
-        url = data.get('url')
-        if not url:
-            return jsonify({'error': 'No URL provided'})
-        feature_dictionary = extract_features2(url)
-        print("This is how many features we expected",len(model_order))
-        #convert the feature dictionary to a list to be safe 
-        feature_list = [feature_dictionary[feature] for feature in model_order]
-        
+        features = extract_features(url)
+        print("Extracted features:", features)
 
-        # features = data.get('features')
+        feature_list = [float(features.get(key, 0)) for key in feature_order]
+        print("Feature list:", feature_list)
 
-        # if not features:
-        #     return jsonify({'error': 'No features provided'})
-        
-        # # print("Received features:", features)
-        # print("Recieved Features)")
-        
-        
-        if len(feature_list) != model.n_features_in_:
-            return jsonify({'error': f"Expected {model.n_features_in_} features, but got {len(feature_list)}"})
+        # Predict using the traditional model
+        prediction = model.predict([feature_list])[0]
+        print("Predicted class:", prediction)
 
-        # Predict with the model
-        prediction = model.predict([feature_list])
-        return jsonify({'prediction': int(prediction[0])})
-        
+        return jsonify({"prediction": int(prediction)})
+
     except Exception as e:
-        return jsonify({'error': str(e)})
+        print("Error during prediction:", str(e))
+        return jsonify({"error": str(e)}), 500
 
-
-# Run the app
 if __name__ == "__main__":
-    app.run(debug=True)  
+    app.run(debug=True)
+
