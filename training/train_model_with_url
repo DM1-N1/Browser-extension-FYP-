@@ -8,7 +8,7 @@ from sklearn.metrics import classification_report, confusion_matrix, accuracy_sc
 import joblib
 
 
-dataset_with_url = pd.read_csv('N:\Browser-extension-FYP-\datasets\dataset_with_url.csv')
+dataset_with_url = pd.read_csv('datasets\dataset_with_url.csv')  # Ensure the path is correct
 # x is the features only hecnce why we drop the target/classifier column status 
 x = dataset_with_url.drop(columns=['status'])
 # y is the target/classifier column status
@@ -70,3 +70,5 @@ joblib.dump(x.columns, "features.pkl")
 
 features = joblib.load("features.pkl")
 print("Features used in the model write or save somewhere in case:",features)
+
+

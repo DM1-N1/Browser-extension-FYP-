@@ -8,7 +8,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import joblib
-from feature_extractor import extract_features
+from feature_extractorv3 import extract_features3
 
 app = Flask(__name__)
 CORS(app)
@@ -21,21 +21,21 @@ feature_order = ['length_url', 'length_hostname', 'ip', 'nb_dots', 'nb_hyphens',
        'nb_qm', 'nb_and', 'nb_or', 'nb_eq', 'nb_underscore', 'nb_tilde',
        'nb_percent', 'nb_slash', 'nb_star', 'nb_colon', 'nb_comma',
        'nb_semicolumn', 'nb_dollar', 'nb_space', 'nb_www', 'nb_com',
-       'http_in_path', 'ratio_digits_url', 'ratio_digits_host', 'punycode',
-       'port', 'tld_in_path', 'tld_in_subdomain', 'abnormal_subdomain',
+       'nb_dslash', 'http_in_path', 'https_token', 'ratio_digits_url',
+       'ratio_digits_host', 'punycode', 'port', 'tld_in_path',
+       'tld_in_subdomain', 'abnormal_subdomain', 'nb_subdomains',
        'prefix_suffix', 'random_domain', 'shortening_service',
-       'path_extension', 'nb_redirection', 'nb_external_redirection',
-       'shortest_words_raw', 'shortest_word_path', 'longest_words_raw',
-       'longest_word_host', 'longest_word_path', 'avg_word_path',
-       'phish_hints', 'domain_in_brand', 'brand_in_subdomain', 'brand_in_path',
+       'nb_redirection', 'nb_external_redirection', 'length_words_raw',
+       'char_repeat', 'shortest_word_host', 'shortest_word_path',
+       'longest_words_raw', 'longest_word_host', 'longest_word_path',
+       'avg_words_raw', 'avg_word_host', 'avg_word_path', 'phish_hints',
+       'domain_in_brand', 'brand_in_subdomain', 'brand_in_path',
        'suspecious_tld', 'statistical_report', 'nb_hyperlinks',
        'ratio_intHyperlinks', 'ratio_extHyperlinks', 'ratio_nullHyperlinks',
        'nb_extCSS', 'ratio_intRedirection', 'ratio_extRedirection',
-       'ratio_intErrors', 'ratio_extErrors', 'login_form', 'external_favicon',
-       'links_in_tags', 'submit_email', 'ratio_intMedia', 'ratio_extMedia',
-       'sfh', 'iframe', 'popup_window', 'safe_anchor', 'onmouseover',
-       'right_clic', 'empty_title', 'domain_with_copyright', 'google_index',
-       'page_rank', 'url_numeric_domain', 'url_numeric_path_length',
+       'ratio_intErrors', 'ratio_extErrors', 'links_in_tags', 'ratio_intMedia',
+       'ratio_extMedia', 'popup_window', 'safe_anchor', 'onmouseover',
+       'right_clic', 'empty_title', 'url_numeric_path_length',
        'url_numeric_num_subdomains', 'url_numeric_has_ip',
        'url_numeric_has_special_chars']
 
@@ -47,7 +47,7 @@ def predict():
     print("Received data:", data)
 
     try:
-        features = extract_features(url)
+        features = extract_features3(url)
         print("Extracted features:", features)
 
         feature_list = [float(features.get(key, 0)) for key in feature_order]
