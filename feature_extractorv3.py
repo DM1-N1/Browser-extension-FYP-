@@ -412,16 +412,16 @@ def extract_features3(url):
         features['nb_redirection'] = 0
         features['nb_external_redirection'] = 0
 
-    features['length_words_raw'] = len(url.split('/'))
-    features['char_repeat'] = 1 if re.search(r'(.)\1{2,}', url) else 0
-    features['shortest_word_host'] = min([len(word) for word in hostname.split('.')]) if hostname else 0
+    features['length_words_raw'] = urlfe.length_word_raw(words_raw)
+    features['char_repeat'] = urlfe.char_repeat(words_raw)
+    features['shortest_word_host'] = urlfe.shortest_word_length(words_raw_host)
     features['shortest_word_path'] = urlfe.shortest_word_length(words_raw_path)
     features['longest_words_raw'] = urlfe.longest_word_length(words_raw)
     features['longest_word_host'] = urlfe.longest_word_length(words_raw_host)
     features['longest_word_path'] = urlfe.longest_word_length(words_raw_path)
     features['avg_words_raw'] = urlfe.average_word_length(words_raw)
     features['avg_word_host'] = urlfe.average_word_length(words_raw_host)
-    features['avg_word_path'] = sum(len(word) for word in path.split('/') if word) / len([w for w in path.split('/') if w]) if path else 0
+    features['avg_word_path'] = urlfe.average_word_length(words_raw_path)
     features['phish_hints'] = urlfe.phish_hints(url)
     brand_keywords = ['paypal', 'bank', 'login', 'secure']
     features['domain_in_brand'] = int(any(brand in hostname for brand in brand_keywords))
@@ -458,3 +458,5 @@ def extract_features3(url):
     print(features)
     print("This is how many features we have",len(features))
     return features    
+
+extract_features3("https://www.google.com/")
