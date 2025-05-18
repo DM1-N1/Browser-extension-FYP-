@@ -427,8 +427,7 @@ def extract_features3(url):
     features['domain_in_brand'] = int(any(brand in hostname for brand in brand_keywords))
     features['brand_in_subdomain'] = int(any(brand in subdomain for brand in brand_keywords))
     features['brand_in_path'] = int(any(brand in path for brand in brand_keywords))
-    suspicious_tlds = ['.zip', '.review', '.country', '.kim', '.cricket']
-    features['suspecious_tld'] = int(any(tld in hostname for tld in suspicious_tlds))
+    features['suspecious_tld'] = urlfe.suspecious_tld(tld)
     features['statistical_report'] = 0
 
     features['nb_hyperlinks'] = ctnfe.nb_hyperlinks(Href, Link, Media, Form, CSS, Favicon)
@@ -459,4 +458,4 @@ def extract_features3(url):
     print("This is how many features we have",len(features))
     return features    
 
-extract_features3("https://www.google.com/")
+extract_features3("https://parade.com/425836/joshwigler/the-amazing-race-host-phil-keoghan-previews-the-season-27-premiere/")
