@@ -1,6 +1,6 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier,AdaBoostClassifier
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier,AdaBoostClassifier, VotingClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
@@ -62,6 +62,21 @@ train_and_evaluate_model(knn, X_train, y_train, X_test, y_test)
 dt = DecisionTreeClassifier(random_state=42, max_depth=20)
 train_and_evaluate_model(dt, X_train, y_train, X_test, y_test)
 
+#This part trains an ensemble model using all the models above
+ensemble_model = VotingClassifier(
+    estimators=[
+        ('rf', rf),
+        ('gb', gb),
+        ('ab', ab),
+        ('lr', lr),
+        ('knn', knn),
+        ('dt', dt)
+    ],
+    voting='soft'
+)
+
+train_and_evaluate_model(ensemble_model, X_train, y_train, X_test, y_test)
+
 # #Saves the best optimised model which is rf on this dataset.
 joblib.dump(rf, "ai_model.pkl")
 
@@ -72,6 +87,7 @@ features = joblib.load("features.pkl")
 print("Features used in the model write or save somewhere in case:",features)
 
 
+
 # ['length_url', 'length_hostname', 'ip', 'nb_dots', 'nb_hyphens', 'nb_at',
 #        'nb_qm', 'nb_and', 'nb_or', 'nb_eq', 'nb_underscore', 'nb_tilde',
 #        'nb_percent', 'nb_slash', 'nb_star', 'nb_colon', 'nb_comma',
@@ -79,16 +95,12 @@ print("Features used in the model write or save somewhere in case:",features)
 #        'nb_dslash', 'http_in_path', 'https_token', 'ratio_digits_url',
 #        'ratio_digits_host', 'punycode', 'port', 'tld_in_path',
 #        'tld_in_subdomain', 'abnormal_subdomain', 'nb_subdomains',
-#        'prefix_suffix', 'random_domain', 'shortening_service',
-#        'length_words_raw', 'char_repeat', 'shortest_word_host',
-#        'shortest_word_path', 'longest_words_raw', 'longest_word_host',
-#        'longest_word_path', 'avg_words_raw', 'avg_word_host', 'avg_word_path',
-#        'phish_hints', 'domain_in_brand', 'brand_in_subdomain', 'brand_in_path',
-#        'suspecious_tld', 'statistical_report', 'nb_hyperlinks',
-#        'ratio_intHyperlinks', 'ratio_extHyperlinks', 'ratio_nullHyperlinks',
-#        'nb_extCSS', 'ratio_intRedirection', 'ratio_extRedirection',
-#        'ratio_intErrors', 'ratio_extErrors', 'links_in_tags', 'ratio_intMedia',
-#        'ratio_extMedia', 'popup_window', 'safe_anchor', 'onmouseover',
-#        'right_clic', 'empty_title', 'url_numeric_path_length',
-#        'url_numeric_num_subdomains', 'url_numeric_has_ip',
-#        'url_numeric_has_special_chars']
+#        'prefix_suffix', 'shortening_service', 'length_words_raw',
+#        'char_repeat', 'shortest_word_host', 'shortest_word_path',
+#        'longest_words_raw', 'longest_word_host', 'longest_word_path',
+#        'avg_words_raw', 'avg_word_host', 'avg_word_path', 'phish_hints',
+#        'domain_in_brand', 'brand_in_subdomain', 'brand_in_path',
+#        'suspecious_tld', 'statistical_report', 'ratio_nullHyperlinks',
+#        'nb_extCSS', 'ratio_extRedirection', 'ratio_intMedia', 'ratio_extMedia',
+#        'popup_window', 'safe_anchor', 'onmouseover', 'right_clic',
+#        'empty_title', 'url_numeric_num_subdomains', 'url_numeric_has_ip']

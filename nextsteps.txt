@@ -1,16 +1,8 @@
-Keep testing out the extension with different sites to pluck out issues 
 Try to get the extension to work before a user visits a page 
-Try to solve pycache issue 
-Try to add extra functionality like the report feature or the false report feature
 Make the error messages more understandable 
 Wherever youve used const get rid of it WE DONT LIKE CONST 
 Refactor and organise code 
 Make it so flask runs automatically once all of the above are done.
-
-
-Ask about the code where you got feature extraction from 
-Ask about open page rank since they used a api/key generated for a set amount of sites 
-Ask about where i editied it to suit my code e.g the random domain function and getting rid of the hostname 
 
 
 # DISSOTATION NEEDS DOING ASAP 
@@ -22,29 +14,3 @@ https_token - done - it was 1 or 0 not just a int conversions
 nb_subdomains - done - options were 1 2 0r 3 not just a count 
 phish_hints - done - not just a conversion to int but a count based on a list 
 
-
-
-
-
-page_rank - key not provided maybe find work around
-length_words_raw - Done
-avg_words_raw - Done
-avg_word_host - Done
-shortest_word_host - Done 
-char_repeat - Done 
-nb_hyperlinks - Done 
-ratio_intHyperlinks - Done 
-ratio_extHyperlinks - Done 
-iframe - Done
-safe_anchor - Done
-onmouseover - Done 
-domain_with_copyright - Done 
-external_favicon - Done
-ratio_extErrors - Done 
-domain_registration_length - Done 
-domain_age - Done 
-dns_record - done
-google_index 
-web_traffic 
-
-Test 1 google index only wrong 
