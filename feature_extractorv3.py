@@ -458,4 +458,143 @@ def extract_features3(url):
     print("This is how many features we have",len(features))
     return features    
 
-extract_features3("https://parade.com/425836/joshwigler/the-amazing-race-host-phil-keoghan-previews-the-season-27-premiere/")
+
+def extract_features_super(url):
+    
+    def words_raw_extraction(domain, subdomain, path):
+        w_domain = re.split("\-|\.|\/|\?|\=|\@|\&|\%|\:|\_", domain.lower())
+        w_subdomain = re.split("\-|\.|\/|\?|\=|\@|\&|\%|\:|\_", subdomain.lower())   
+        w_path = re.split("\-|\.|\/|\?|\=|\@|\&|\%|\:|\_", path.lower())
+        raw_words = w_domain + w_path + w_subdomain
+        w_host = w_domain + w_subdomain
+        raw_words = list(filter(None,raw_words))
+        return raw_words, list(filter(None,w_host)), list(filter(None,w_path))
+
+    
+    Href = {'internals':[], 'externals':[], 'null':[]}
+    Link = {'internals':[], 'externals':[], 'null':[]}
+    Anchor = {'safe':[], 'unsafe':[], 'null':[]}
+    Media = {'internals':[], 'externals':[], 'null':[]}
+    Form = {'internals':[], 'externals':[], 'null':[]}
+    CSS = {'internals':[], 'externals':[], 'null':[]}
+    Favicon = {'internals':[], 'externals':[], 'null':[]}
+    IFrame = {'visible':[], 'invisible':[], 'null':[]}
+    Title =''
+    Text= ''
+
+    state, resolved_url, response = is_URL_accessible(url)
+    if state:
+        content = response.content
+    else:
+        content = ""
+
+    hostname, domain, path = get_domain(url)
+    extracted_domain = tldextract.extract(url)
+    domain = extracted_domain.domain+'.'+extracted_domain.suffix
+    subdomain = extracted_domain.subdomain
+    tmp = url[url.find(extracted_domain.suffix):len(url)]
+    pth = tmp.partition("/")
+    path = pth[1] + pth[2]
+    words_raw, words_raw_host, words_raw_path= words_raw_extraction(extracted_domain.domain, subdomain, pth[2])
+    tld = extracted_domain.suffix
+    parsed = urllib.parse.urlparse(url)
+    scheme = parsed.scheme
+    
+    Href, Link, Anchor, Media, Form, CSS, Favicon, IFrame, Title, Text = extract_data_from_URL(hostname, content, domain, Href, Link, Anchor, Media, Form, CSS, Favicon, IFrame, Title, Text)
+
+    features = {}
+    parsed = urllib.parse.urlparse(url)
+    hostname = parsed.hostname or ''
+    path = parsed.path or ''
+    netloc = parsed.netloc or ''
+    scheme = parsed.scheme or ''
+    query = parsed.query or ''
+
+   
+    features['length_url'] = urlfe.url_length(url)  # Use the `url_length` function from `urlfe`
+    features['length_hostname'] = urlfe.url_length(hostname)  # Use the same function for hostname length
+    features['ip'] = urlfe.having_ip_address(url)  # Use the `having_ip_address` function from `urlfe`
+    features['nb_dots'] = urlfe.count_dots(url)  # Use the `count_dots` function from `urlfe`
+    features['nb_hyphens'] = urlfe.count_hyphens(url)  # Use the `count_hyphens` function from `urlfe`
+    features['nb_at'] = urlfe.count_at(url)  # Use the `count_at` function from `urlfe`
+    features['nb_qm'] = urlfe.count_exclamation(url)  # Use the `count_question_mark` function from `urlfe`
+    features['nb_and'] = urlfe.count_and(url)  # Use the `count_and` function from `urlfe`
+    features['nb_or'] = urlfe.count_or(url)  # Use the `count_or` function from `urlfe`
+    features['nb_eq'] = urlfe.count_equal(url)  # Use the `count_equal` function from `urlfe`
+    features['nb_underscore'] = urlfe.count_underscore(url)  # Use the `count_underscore` function from `urlfe`
+    features['nb_tilde'] = urlfe.count_tilde(url)  # Use the `count_tilde` function from `urlfe`
+    features['nb_percent'] = urlfe.count_percentage(url)  # Use the `count_percentage` function from `urlfe`
+    features['nb_slash'] = urlfe.count_slash(url)  # Use the `count_slash` function from `urlfe`
+    features['nb_star'] = urlfe.count_star(url)  # Use the `count_star` function from `urlfe`
+    features['nb_colon'] = urlfe.count_colon(url)  # Use the `count_colon` function from `urlfe`
+    features['nb_comma'] = urlfe.count_comma(url)  # Use the `count_comma` function from `urlfe`
+    features['nb_semicolumn'] = urlfe.count_semicolumn(url)  # Use the `count_semicolon` function from `urlfe`
+    features['nb_dollar'] = urlfe.count_dollar(url)  # Use the `count_dollar` function from `urlfe`
+    features['nb_space'] = urlfe.count_space(url)  # Use the `count_space` function from `urlfe`
+    features['nb_www'] = urlfe.check_www(url)  # Use the `check_www` function from `urlfe`
+    features['nb_com'] = urlfe.check_com(url)  # Use the `check_com` function from `urlfe`
+    features['nb_dslash'] = urlfe.count_double_slash(url)  # Use the `count_double_slash` function from `urlfe`
+    features['http_in_path'] = urlfe.count_http_token(path)  # Use the `count_http_token` function from `urlfe`
+    features['https_token'] = urlfe.https_token(scheme)  # Use the `https_token` function from `urlfe`
+    features['ratio_digits_url'] = urlfe.ratio_digits(url)
+    features['ratio_digits_host'] = urlfe.ratio_digits(hostname)
+    features['punycode'] = urlfe.punycode(url)
+    features['port'] = urlfe.port(url)
+    features['tld_in_path'] = urlfe.tld_in_path(tld, path)
+    features['tld_in_path'] = 0
+    features['tld_in_subdomain'] = urlfe.tld_in_subdomain(tld, subdomain)
+    features['abnormal_subdomain'] = urlfe.abnormal_subdomain(subdomain)
+    features['nb_subdomains'] = urlfe.count_subdomain(url)
+    features['prefix_suffix'] = urlfe.prefix_suffix(url)
+    features['random_domain'] = urlfe.random_domain(domain)
+    features['shortening_service'] = urlfe.shortening_service(url)
+    features['nb_redirection'] = urlfe.count_redirection(page)
+    features['nb_external_redirection'] = urlfe.count_external_redirection(page, domain)
+
+    features['length_words_raw'] = urlfe.length_word_raw(words_raw)
+    features['char_repeat'] = urlfe.char_repeat(words_raw)
+    features['shortest_word_host'] = urlfe.shortest_word_length(words_raw_host)
+    features['shortest_word_path'] = urlfe.shortest_word_length(words_raw_path)
+    features['longest_words_raw'] = urlfe.longest_word_length(words_raw)
+    features['longest_word_host'] = urlfe.longest_word_length(words_raw_host)
+    features['longest_word_path'] = urlfe.longest_word_length(words_raw_path)
+    features['avg_words_raw'] = urlfe.average_word_length(words_raw)
+    features['avg_word_host'] = urlfe.average_word_length(words_raw_host)
+    features['avg_word_path'] = urlfe.average_word_length(words_raw_path)
+    features['phish_hints'] = urlfe.phish_hints(url)
+    features['domain_in_brand'] = urlfe.domain_in_brand(extracted_domain.domain)
+    features['brand_in_subdomain'] = urlfe.brand_in_path(extracted_domain.domain,subdomain)
+    features['brand_in_path'] = urlfe.brand_in_path(extracted_domain.domain,path)
+    features['suspecious_tld'] = urlfe.suspecious_tld(tld)
+    features['statistical_report'] = urlfe.statistical_report(url, domain)
+    features['nb_hyperlinks'] = ctnfe.nb_hyperlinks(Href, Link, Media, Form, CSS, Favicon)
+    features['ratio_intHyperlinks'] = ctnfe.internal_hyperlinks(Href, Link, Media, Form, CSS, Favicon)
+    features['ratio_extHyperlinks'] = ctnfe.external_hyperlinks(Href, Link, Media, Form, CSS, Favicon)
+    features['ratio_nullHyperlinks'] = ctnfe.null_hyperlinks(hostname, Href, Link, Media, Form, CSS, Favicon)
+    features['nb_extCSS'] = ctnfe.external_css(CSS)
+    features['ratio_intRedirection'] = ctnfe.internal_redirection(Href, Link, Media, Form, CSS, Favicon)
+    features['ratio_extRedirection'] = ctnfe.external_redirection(Href, Link, Media, Form, CSS, Favicon)
+    features['ratio_intErrors'] = ctnfe.internal_errors(Href, Link, Media, Form, CSS, Favicon)
+    features['ratio_extErrors'] = ctnfe.external_errors(Href, Link, Media, Form, CSS, Favicon)
+    features['links_in_tags'] = ctnfe.links_in_tags(Link)
+    features['ratio_intMedia'] = ctnfe.internal_media(Media)
+    features['ratio_extMedia'] = ctnfe.external_media(Media)
+    features['popup_window'] = ctnfe.popup_window(Text)
+    features['safe_anchor'] = ctnfe.safe_anchor(Anchor)
+    features['onmouseover'] = ctnfe.onmouseover(Text)
+    features['right_clic'] = ctnfe.right_clic(Text)
+    features['empty_title'] = ctnfe.empty_title(Title)
+
+    features['url_numeric_path_length'] = sum(c.isdigit() for c in path)
+    features['url_numeric_num_subdomains'] = hostname.count('.') - 1
+    features['url_numeric_has_ip'] = features['ip']
+    features['url_numeric_has_special_chars'] = int(bool(re.search(r'[^a-zA-Z0-9]', url)))
+
+    print(url)
+    print(features)
+    print("This is how many features we have",len(features))
+    return features    
+    
+
+
+extract_features_super("https://parade.com/425836/joshwigler/the-amazing-race-host-phil-keoghan-previews-the-season-27-premiere/")
