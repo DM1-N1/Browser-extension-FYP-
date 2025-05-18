@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <div class="container">
+    <div class="container" id="main-interface">
         <h1 class="title">Phishing Detector</h1>
         <div class="hook-container">
             <div class="hook">
@@ -22,6 +22,26 @@
         <p id="url" class="url-display">Current URL: <span id="current-url">Not available</span></p>
         <p id="prediction" class="prediction-text">Prediction: <span id="prediction-result">Loading...</span></p>
         <p id="confidence" class="confidence-text">Confidence: <span id="confidence-result">Loading...</span></p>
+
+        <button id="report-button" class="btn report-btn">Report False Classification</button>
+    </div>
+
+    <!-- The hidden part -->
+    <div class="container" id="feedback-form" style="display: none;">
+        <h1 class="title">Report False Classification</h1>
+        <form id="report-form">
+            <label for="reported-url">URL:</label>
+            <input type="text" id="reported-url" name="reported-url" placeholder="Enter the URL" required>
+            <br>
+            <label for="correct-classification">Correct Classification:</label>
+            <select id="correct-classification" name="correct-classification" required>
+                <option value="safe">Safe</option>
+                <option value="phishing">Phishing</option>
+            </select>
+            <br>
+            <button type="submit" class="btn">Submit Feedback</button>
+        </form>
+        <button id="cancel-feedback" class="btn cancel-btn">Cancel</button>
     </div>
 
     <script defer src="test_skils.js"></script>
