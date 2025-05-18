@@ -1,6 +1,6 @@
 {
-    "name": "Hello Extensions",
-    "description": "Base Level Extension",
+    "name": "Phishing Detector",
+    "description": "A basic phishing detector that uses a machine learning model to detect phishing URLs.",
     "version": "1.0",
     "manifest_version": 3,
     "permissions" : ["activeTab","tabs","downloads"],
