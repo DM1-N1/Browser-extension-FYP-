@@ -487,7 +487,7 @@ def extract_features_super(url):
         content = response.content
     else:
         content = ""
-
+    
     hostname, domain, path = get_domain(url)
     extracted_domain = tldextract.extract(url)
     domain = extracted_domain.domain+'.'+extracted_domain.suffix
@@ -541,16 +541,12 @@ def extract_features_super(url):
     features['punycode'] = urlfe.punycode(url)
     features['port'] = urlfe.port(url)
     features['tld_in_path'] = urlfe.tld_in_path(tld, path)
-    features['tld_in_path'] = 0
     features['tld_in_subdomain'] = urlfe.tld_in_subdomain(tld, subdomain)
     features['abnormal_subdomain'] = urlfe.abnormal_subdomain(subdomain)
     features['nb_subdomains'] = urlfe.count_subdomain(url)
     features['prefix_suffix'] = urlfe.prefix_suffix(url)
     features['random_domain'] = urlfe.random_domain(domain)
     features['shortening_service'] = urlfe.shortening_service(url)
-    features['nb_redirection'] = urlfe.count_redirection(page)
-    features['nb_external_redirection'] = urlfe.count_external_redirection(page, domain)
-
     features['length_words_raw'] = urlfe.length_word_raw(words_raw)
     features['char_repeat'] = urlfe.char_repeat(words_raw)
     features['shortest_word_host'] = urlfe.shortest_word_length(words_raw_host)

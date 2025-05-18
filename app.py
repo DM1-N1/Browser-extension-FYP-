@@ -8,7 +8,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import joblib
-from feature_extractorv3 import extract_features3
+from feature_extractorv3 import extract_features_super
 
 app = Flask(__name__)
 CORS(app)
@@ -25,11 +25,10 @@ feature_order = ['length_url', 'length_hostname', 'ip', 'nb_dots', 'nb_hyphens',
        'ratio_digits_host', 'punycode', 'port', 'tld_in_path',
        'tld_in_subdomain', 'abnormal_subdomain', 'nb_subdomains',
        'prefix_suffix', 'random_domain', 'shortening_service',
-       'nb_redirection', 'nb_external_redirection', 'length_words_raw',
-       'char_repeat', 'shortest_word_host', 'shortest_word_path',
-       'longest_words_raw', 'longest_word_host', 'longest_word_path',
-       'avg_words_raw', 'avg_word_host', 'avg_word_path', 'phish_hints',
-       'domain_in_brand', 'brand_in_subdomain', 'brand_in_path',
+       'length_words_raw', 'char_repeat', 'shortest_word_host',
+       'shortest_word_path', 'longest_words_raw', 'longest_word_host',
+       'longest_word_path', 'avg_words_raw', 'avg_word_host', 'avg_word_path',
+       'phish_hints', 'domain_in_brand', 'brand_in_subdomain', 'brand_in_path',
        'suspecious_tld', 'statistical_report', 'nb_hyperlinks',
        'ratio_intHyperlinks', 'ratio_extHyperlinks', 'ratio_nullHyperlinks',
        'nb_extCSS', 'ratio_intRedirection', 'ratio_extRedirection',
@@ -47,7 +46,7 @@ def predict():
     print("Received data:", data)
 
     try:
-        features = extract_features3(url)
+        features = extract_features_super(url)
         print("Extracted features:", features)
 
         feature_list = [float(features.get(key, 0)) for key in feature_order]
@@ -55,9 +54,12 @@ def predict():
 
         # Predict using the traditional model
         prediction = model.predict([feature_list])[0]
+        probabilities = model.predict_proba([feature_list])[0]
+        confidence = max(probabilities)
         print("Predicted class:", prediction)
+        print("Confidence level:", confidence)
 
-        return jsonify({"prediction": int(prediction)})
+        return jsonify({"prediction": int(prediction),"confidence": float(confidence)})
 
     except Exception as e:
         print("Error during prediction:", str(e))

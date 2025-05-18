@@ -8,8 +8,8 @@ original_dataset = pd.read_csv('datasets\dataset_phishing.csv')
 dataset_no_url = pd.read_csv('datasets\dataset_no_url.csv')
 dataset_with_url = pd.read_csv('datasets\dataset_with_url.csv')
 
-# # STEP 1 
-# # Drop non-URL-based features only if they exist in the dataset
+# STEP 1 
+# Drop non-URL-based features only if they exist in the dataset
 # non_url_features = [
 
 #     # Third-party dependent (excluded by your instruction)
@@ -20,6 +20,8 @@ dataset_with_url = pd.read_csv('datasets\dataset_with_url.csv')
 #     'dns_record',
 #     'google_index',
 #     'page_rank',
+#      'nb_redirection',
+#    'nb_external_redirection',
 
 #     'shortest_words_raw',               # Weak semantic signal
 #     'path_extension',                   # Mostly 0 or noisy
@@ -45,7 +47,7 @@ dataset_with_url = pd.read_csv('datasets\dataset_with_url.csv')
 # dataset_no_url.to_csv('datasets/dataset_no_url.csv', index=False)
 # print("Cleaned dataset_no_url saved.")
 
-#STEP 2
+# # STEP 2
 # dataset_no_url.drop(columns=['url'], inplace=True)
 # dataset_no_url.to_csv('datasets/dataset_no_url.csv', index=False)
 # print("Dropped URL column from dataset_no_url.")
@@ -74,33 +76,12 @@ dataset_with_url = pd.read_csv('datasets\dataset_with_url.csv')
 
 # #STEP 4
 # Map 'legitimate' to 0 and 'phishing' to 1 in dataset_no_url
-dataset_no_url['status'] = dataset_no_url['status'].map({'legitimate': 0, 'phishing': 1})
-dataset_no_url.to_csv('datasets\dataset_no_url.csv', index=False)
-print("Mapped and saved dataset_no_url")
+# dataset_no_url['status'] = dataset_no_url['status'].map({'legitimate': 0, 'phishing': 1})
+# dataset_no_url.to_csv('datasets\dataset_no_url.csv', index=False)
+# print("Mapped and saved dataset_no_url")
 
-# Map 'legitimate' to 0 and 'phishing' to 1 in dataset_with_url
-dataset_with_url['status'] = dataset_with_url['status'].map({'legitimate': 0, 'phishing': 1})
-dataset_with_url.to_csv('datasets\dataset_with_url.csv', index=False)
-print("Mapped and saved dataset_with_url")
+# # Map 'legitimate' to 0 and 'phishing' to 1 in dataset_with_url
+# dataset_with_url['status'] = dataset_with_url['status'].map({'legitimate': 0, 'phishing': 1})
+# dataset_with_url.to_csv('datasets\dataset_with_url.csv', index=False)
+# print("Mapped and saved dataset_with_url")
 
-# ['length_url', 'length_hostname', 'ip', 'nb_dots', 'nb_hyphens', 'nb_at',
-#        'nb_qm', 'nb_and', 'nb_or', 'nb_eq', 'nb_underscore', 'nb_tilde',
-#        'nb_percent', 'nb_slash', 'nb_star', 'nb_colon', 'nb_comma',
-#        'nb_semicolumn', 'nb_dollar', 'nb_space', 'nb_www', 'nb_com',
-#        'nb_dslash', 'http_in_path', 'https_token', 'ratio_digits_url',
-#        'ratio_digits_host', 'punycode', 'port', 'tld_in_path',
-#        'tld_in_subdomain', 'abnormal_subdomain', 'nb_subdomains',
-#        'prefix_suffix', 'random_domain', 'shortening_service',
-#        'nb_redirection', 'nb_external_redirection', 'length_words_raw',
-#        'char_repeat', 'shortest_word_host', 'shortest_word_path',
-#        'longest_words_raw', 'longest_word_host', 'longest_word_path',
-#        'avg_words_raw', 'avg_word_host', 'avg_word_path', 'phish_hints',
-#        'domain_in_brand', 'brand_in_subdomain', 'brand_in_path',
-#        'suspecious_tld', 'statistical_report', 'nb_hyperlinks',
-#        'ratio_intHyperlinks', 'ratio_extHyperlinks', 'ratio_nullHyperlinks',
-#        'nb_extCSS', 'ratio_intRedirection', 'ratio_extRedirection',
-#        'ratio_intErrors', 'ratio_extErrors', 'links_in_tags', 'ratio_intMedia',
-#        'ratio_extMedia', 'popup_window', 'safe_anchor', 'onmouseover',
-#        'right_clic', 'empty_title', 'url_numeric_path_length',
-#        'url_numeric_num_subdomains', 'url_numeric_has_ip',
-#        'url_numeric_has_special_chars']

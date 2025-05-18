@@ -4,19 +4,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Phishing Detection Extension</title>
+    <link rel="stylesheet" href="style.css"> <!-- Linking the CSS file -->
 </head>
 
 <body>
-    <h1> Hello Extensions</h1>
-    <button id="button1">Click me</button>
-    <!-- <button id="urlbutton">geturl</button> -->
-    <p id="url"> Current URL</p>
-    <p id="prediction">The predicition is</p>
+    <div class="container">
+        <h1 class="title">Phishing Detector</h1>
+        <div class="hook-container">
+            <div class="hook">
+                <div class="hook-top"></div>
+                <div class="hook-bottom"></div>
+            </div>
+        </div>
+
+        <button id="button1" class="btn">Check URL</button>
+        <p id="url" class="url-display">Current URL: <span id="current-url">Not available</span></p>
+        <p id="prediction" class="prediction-text">Prediction: <span id="prediction-result">Loading...</span></p>
+        <p id="confidence" class="confidence-text">Confidence: <span id="confidence-result">Loading...</span></p>
+    </div>
+
+    <script defer src="test_skils.js"></script>
 </body>
 
 </html>
-
-
-<script defer src="test_skils.js"></script>
-<link rel="stylesheet" href="style.css">
