@@ -1,15 +1,20 @@
 {
-    "name": "Phishing Detector",
-    "description": "A basic phishing detector that uses a machine learning model to detect phishing URLs.",
-    "version": "1.0",
-    "manifest_version": 3,
-    "permissions" : ["activeTab","tabs","downloads"],
-    "host_permissions": [
+  "name": "Phishing Detector",
+  "description": "A basic phishing detector that uses a machine learning model to detect phishing URLs.",
+  "version": "1.0",
+  "manifest_version": 3,
+  "permissions": ["activeTab", "tabs", "downloads"],
+  "host_permissions": [
       "<all_urls>"
-    ],
-    "action": {
+  ],
+  "web_accessible_resources": [
+      {
+          "resources": ["warning_page.html", "warning.js"],
+          "matches": ["<all_urls>"]
+      }
+  ],
+  "action": {
       "default_popup": "hello.html",
       "default_icon": "hello_extensions.png"
-      
-    }
   }
+}

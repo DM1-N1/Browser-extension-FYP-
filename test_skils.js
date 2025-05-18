@@ -80,6 +80,20 @@ function handleFormSubmission(event) {
     hideFeedbackForm();
 }
 
+function displaywarningpage(prediction) {
+    if (prediction === 1) {
+        chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+            let currentTab = tabs[0]; // Get the current tab
+            let currentUrl = currentTab.url; // Extract the URL of the current tab
+
+            // Redirect to the warning page with the current URL as a parameter
+            chrome.tabs.update({
+                url: chrome.runtime.getURL(`warning_page.html?url=${encodeURIComponent(currentUrl)}`)
+            });
+        });
+    }
+}
+
 // Function to fetch prediction and confidence
 function getPrediction() {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -99,6 +113,7 @@ function getPrediction() {
                 console.log("Prediction result:", data.prediction);
                 console.log("Confidence level:", data.confidence);
                 changePredictionText(data.prediction, data.confidence); // Pass confidence to the function
+                displaywarningpage(data.prediction)
             })
             .catch(error => {
                 console.error("Error fetching prediction:", error);

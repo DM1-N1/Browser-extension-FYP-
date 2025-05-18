@@ -163,3 +163,20 @@ body {
 .warning-link:hover {
     background-color: #555;
 }
+
+.warning-button {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    background-color: #333;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none; /* Remove default button border */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px; /* Add spacing between buttons */
+}
+
+.warning-button:hover {
+    background-color: #555;
+}
