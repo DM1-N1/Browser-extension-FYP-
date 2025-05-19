@@ -73,7 +73,7 @@ function handleFormSubmission(event) {
     saveReport(reportData);
 
     // Show a thank-you message
-    alert("Thank you for your feedback!");
+    window.alert("Thank you for your feedback!");
 
     // Reset the form and switch back to the main interface
     reportForm.reset();
