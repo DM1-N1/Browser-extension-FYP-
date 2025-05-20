@@ -1,13 +1,13 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-from tensorflow.keras.layers import Input
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
+from tensorflow.keras.layers import Input # type: ignore
+from tensorflow.keras.models import Sequential # type: ignore
+from tensorflow.keras.layers import Dense # type: ignore
 from keras.optimizers import Adam
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 
-dataset_with_url = pd.read_csv('/workspaces/Browser-extension-FYP-/dataset_no_url.csv')
+dataset_with_url = pd.read_csv('datasets/dataset_no_url.csv')
 # x is the features only hecnce why we drop the target/classifier column status 
 x = dataset_with_url.drop(columns=['status'])
 # y is the target/classifier column status

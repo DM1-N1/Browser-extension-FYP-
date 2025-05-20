@@ -77,14 +77,14 @@ ensemble_model = VotingClassifier(
 
 train_and_evaluate_model(ensemble_model, X_train, y_train, X_test, y_test)
 
-# #Saves the best optimised model which is rf on this dataset.
-joblib.dump(rf, "ai_model.pkl")
+# # #Saves the best optimised model which is rf on this dataset.
+# joblib.dump(rf, "ai_model.pkl")
 
-# # Saves the features used in the model
-joblib.dump(x.columns, "features.pkl")
+# # # Saves the features used in the model
+# joblib.dump(x.columns, "features.pkl")
 
-features = joblib.load("features.pkl")
-print("Features used in the model write or save somewhere in case:",features)
+# features = joblib.load("features.pkl")
+# print("Features used in the model write or save somewhere in case:",features)
 
 
 

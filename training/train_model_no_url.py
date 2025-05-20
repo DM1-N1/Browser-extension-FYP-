@@ -1,6 +1,6 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier,AdaBoostClassifier
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier,AdaBoostClassifier, VotingClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
@@ -8,7 +8,7 @@ from sklearn.metrics import classification_report, confusion_matrix, accuracy_sc
 import joblib
 
 
-dataset_no_url = pd.read_csv('N:\Browser-extension-FYP- - Copy\datasets\dataset_no_url.csv')
+dataset_no_url = pd.read_csv('datasets\dataset_no_url.csv')
 # x is the features only hecnce why we drop the target/classifier column status 
 x = dataset_no_url.drop(columns=['status'])
 # y is the target/classifier column status
@@ -61,6 +61,20 @@ train_and_evaluate_model(knn, X_train, y_train, X_test, y_test)
 # This part trains the Decision Tree model
 dt = DecisionTreeClassifier(random_state=42, max_depth=20)
 train_and_evaluate_model(dt, X_train, y_train, X_test, y_test)
+
+ensemble_model = VotingClassifier(
+    estimators=[
+        ('rf', rf),
+        ('gb', gb),
+        ('ab', ab),
+        ('lr', lr),
+        ('knn', knn),
+        ('dt', dt)
+    ],
+    voting='soft'
+)
+# This part trains the ensemble model
+train_and_evaluate_model(ensemble_model, X_train, y_train, X_test, y_test)
 
 
 # joblib.dump(model, "random_forest_no_url.pkl")
