@@ -15,6 +15,7 @@ This is a browser extension that uses AI to detect whether a site is legitimate 
    - For Chrome: `chrome://extensions/`
 3. Enable "Developer mode."
 4. Click "Load unpacked" and select the cloned repository folder.
+5. Ensure Pycache is deleted before running 
 
 ## Usage
 1. Once installed, the extension will automatically analyze websites as you browse.
