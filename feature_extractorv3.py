@@ -87,7 +87,7 @@ def extract_data_from_URL(hostname, content, domain, Href, Link, Anchor, Media, 
 
     # collect all external and internal hrefs from url
     for href in soup.find_all('a', href=True):
-        dots = [x.start(0) for x in re.finditer('\.', href['href'])]
+        dots = [x.start(0) for x in re.finditer(r'\.', href['href'])]
         if hostname in href['href'] or domain in href['href'] or len(dots) == 1 or not href['href'].startswith('http'):
             if "#" in href['href'] or "javascript" in href['href'].lower() or "mailto" in href['href'].lower():
                  Anchor['unsafe'].append(href['href']) 
@@ -104,7 +104,7 @@ def extract_data_from_URL(hostname, content, domain, Href, Link, Anchor, Media, 
 
     # collect all media src tags
     for img in soup.find_all('img', src=True):
-        dots = [x.start(0) for x in re.finditer('\.', img['src'])]
+        dots = [x.start(0) for x in re.finditer(r'\.', img['src'])]
         if hostname in img['src'] or domain in img['src'] or len(dots) == 1 or not img['src'].startswith('http'):
             if not img['src'].startswith('http'):
                 if not img['src'].startswith('/'):
@@ -118,7 +118,7 @@ def extract_data_from_URL(hostname, content, domain, Href, Link, Anchor, Media, 
            
     
     for audio in soup.find_all('audio', src=True):
-        dots = [x.start(0) for x in re.finditer('\.', audio['src'])]
+        dots = [x.start(0) for x in re.finditer(r'\.', audio['src'])]
         if hostname in audio['src'] or domain in audio['src'] or len(dots) == 1 or not audio['src'].startswith('http'):
              if not audio['src'].startswith('http'):
                 if not audio['src'].startswith('/'):
@@ -131,7 +131,7 @@ def extract_data_from_URL(hostname, content, domain, Href, Link, Anchor, Media, 
             Media['externals'].append(audio['src'])
             
     for embed in soup.find_all('embed', src=True):
-        dots = [x.start(0) for x in re.finditer('\.', embed['src'])]
+        dots = [x.start(0) for x in re.finditer(r'\.', embed['src'])]
         if hostname in embed['src'] or domain in embed['src'] or len(dots) == 1 or not embed['src'].startswith('http'):
              if not embed['src'].startswith('http'):
                 if not embed['src'].startswith('/'):
@@ -144,7 +144,7 @@ def extract_data_from_URL(hostname, content, domain, Href, Link, Anchor, Media, 
             Media['externals'].append(embed['src'])
            
     for i_frame in soup.find_all('iframe', src=True):
-        dots = [x.start(0) for x in re.finditer('\.', i_frame['src'])]
+        dots = [x.start(0) for x in re.finditer(r'\.', i_frame['src'])]
         if hostname in i_frame['src'] or domain in i_frame['src'] or len(dots) == 1 or not i_frame['src'].startswith('http'):
             if not i_frame['src'].startswith('http'):
                 if not i_frame['src'].startswith('/'):
@@ -159,7 +159,7 @@ def extract_data_from_URL(hostname, content, domain, Href, Link, Anchor, Media, 
 
     # collect all link tags
     for link in soup.findAll('link', href=True):
-        dots = [x.start(0) for x in re.finditer('\.', link['href'])]
+        dots = [x.start(0) for x in re.finditer(r'\.', link['href'])]
         if hostname in link['href'] or domain in link['href'] or len(dots) == 1 or not link['href'].startswith('http'):
             if not link['href'].startswith('http'):
                 if not link['href'].startswith('/'):
@@ -172,7 +172,7 @@ def extract_data_from_URL(hostname, content, domain, Href, Link, Anchor, Media, 
             Link['externals'].append(link['href'])
 
     for script in soup.find_all('script', src=True):
-        dots = [x.start(0) for x in re.finditer('\.', script['src'])]
+        dots = [x.start(0) for x in re.finditer(r'\.', script['src'])]
         if hostname in script['src'] or domain in script['src'] or len(dots) == 1 or not script['src'].startswith('http'):
             if not script['src'].startswith('http'):
                 if not script['src'].startswith('/'):
@@ -187,7 +187,7 @@ def extract_data_from_URL(hostname, content, domain, Href, Link, Anchor, Media, 
             
     # collect all css
     for link in soup.find_all('link', rel='stylesheet'):
-        dots = [x.start(0) for x in re.finditer('\.', link['href'])]
+        dots = [x.start(0) for x in re.finditer(r'\.', link['href'])]
         if hostname in link['href'] or domain in link['href'] or len(dots) == 1 or not link['href'].startswith('http'):
             if not link['href'].startswith('http'):
                 if not link['href'].startswith('/'):
@@ -204,7 +204,7 @@ def extract_data_from_URL(hostname, content, domain, Href, Link, Anchor, Media, 
             start = str(style[0]).index('@import url(')
             end = str(style[0]).index(')')
             css = str(style[0])[start+12:end]
-            dots = [x.start(0) for x in re.finditer('\.', css)]
+            dots = [x.start(0) for x in re.finditer(r'\.', css)]
             if hostname in css or domain in css or len(dots) == 1 or not css.startswith('http'):
                 if not css.startswith('http'):
                     if not css.startswith('/'):
@@ -220,7 +220,7 @@ def extract_data_from_URL(hostname, content, domain, Href, Link, Anchor, Media, 
             
     # collect all form actions
     for form in soup.findAll('form', action=True):
-        dots = [x.start(0) for x in re.finditer('\.', form['action'])]
+        dots = [x.start(0) for x in re.finditer(r'\.', form['action'])]
         if hostname in form['action'] or domain in form['action'] or len(dots) == 1 or not form['action'].startswith('http'):
             if not form['action'].startswith('http'):
                 if not form['action'].startswith('/'):
@@ -236,7 +236,7 @@ def extract_data_from_URL(hostname, content, domain, Href, Link, Anchor, Media, 
     # collect all link tags
     for head in soup.find_all('head'):
         for head.link in soup.find_all('link', href=True):
-            dots = [x.start(0) for x in re.finditer('\.', head.link['href'])]
+            dots = [x.start(0) for x in re.finditer(r'\.', head.link['href'])]
             if hostname in head.link['href'] or len(dots) == 1 or domain in head.link['href'] or not head.link['href'].startswith('http'):
                 if not head.link['href'].startswith('http'):
                     if not head.link['href'].startswith('/'):
@@ -259,7 +259,7 @@ def extract_data_from_URL(hostname, content, domain, Href, Link, Anchor, Media, 
                     isicon = True
        
             if isicon:
-                 dots = [x.start(0) for x in re.finditer('\.', head.link['href'])]
+                 dots = [x.start(0) for x in re.finditer(r'\.', head.link['href'])]
                  if hostname in head.link['href'] or len(dots) == 1 or domain in head.link['href'] or not head.link['href'].startswith('http'):
                      if not head.link['href'].startswith('http'):
                         if not head.link['href'].startswith('/'):
@@ -302,9 +302,9 @@ def extract_data_from_URL(hostname, content, domain, Href, Link, Anchor, Media, 
 
 def extract_features3(url):
     def words_raw_extraction(domain, subdomain, path):
-        w_domain = re.split("\-|\.|\/|\?|\=|\@|\&|\%|\:|\_", domain.lower())
-        w_subdomain = re.split("\-|\.|\/|\?|\=|\@|\&|\%|\:|\_", subdomain.lower())   
-        w_path = re.split("\-|\.|\/|\?|\=|\@|\&|\%|\:|\_", path.lower())
+        w_domain = re.split(r"\-|\.|\/|\?|\=|\@|\&|\%|\:|\_", domain.lower())
+        w_subdomain = re.split(r"\-|\.|\/|\?|\=|\@|\&|\%|\:|\_", subdomain.lower())   
+        w_path = re.split(r"\-|\.|\/|\?|\=|\@|\&|\%|\:|\_", path.lower())
         raw_words = w_domain + w_path + w_subdomain
         w_host = w_domain + w_subdomain
         raw_words = list(filter(None,raw_words))
@@ -462,9 +462,9 @@ def extract_features3(url):
 def extract_features_super(url):
     
     def words_raw_extraction(domain, subdomain, path):
-        w_domain = re.split("\-|\.|\/|\?|\=|\@|\&|\%|\:|\_", domain.lower())
-        w_subdomain = re.split("\-|\.|\/|\?|\=|\@|\&|\%|\:|\_", subdomain.lower())   
-        w_path = re.split("\-|\.|\/|\?|\=|\@|\&|\%|\:|\_", path.lower())
+        w_domain = re.split(r"\-|\.|\/|\?|\=|\@|\&|\%|\:|\_", domain.lower())
+        w_subdomain = re.split(r"\-|\.|\/|\?|\=|\@|\&|\%|\:|\_", subdomain.lower())   
+        w_path = re.split(r"\-|\.|\/|\?|\=|\@|\&|\%|\:|\_", path.lower())
         raw_words = w_domain + w_path + w_subdomain
         w_host = w_domain + w_subdomain
         raw_words = list(filter(None,raw_words))
@@ -586,11 +586,12 @@ def extract_features_super(url):
     features['url_numeric_has_ip'] = features['ip']
     # features['url_numeric_has_special_chars'] = int(bool(re.search(r'[^a-zA-Z0-9]', url)))
 
-    print(url)
-    print(features)
-    print("This is how many features we have",len(features))
-    return features    
-    
+    return features
 
 
-extract_features_super("https://parade.com/425836/joshwigler/the-amazing-race-host-phil-keoghan-previews-the-season-27-premiere/")
+if __name__ == '__main__':
+    sample_url = "https://parade.com/425836/joshwigler/the-amazing-race-host-phil-keoghan-previews-the-season-27-premiere/"
+    print(sample_url)
+    result = extract_features_super(sample_url)
+    print(result)
+    print('This is how many features we have', len(result))

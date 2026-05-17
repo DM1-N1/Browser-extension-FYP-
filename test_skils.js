@@ -111,6 +111,7 @@ function getConfiguredServerUrls() {
 async function fetchPrediction(urls, payload) {
     for (const baseUrl of urls) {
         try {
+            console.log(`Trying prediction server: ${buildPredictUrl(baseUrl)}`);
             const response = await fetch(buildPredictUrl(baseUrl), {
                 method: 'POST',
                 headers: {
@@ -129,7 +130,7 @@ async function fetchPrediction(urls, payload) {
         }
     }
 
-    throw new Error(`Could not reach prediction server. Tried: ${urls.join(', ')}`);
+    throw new Error(`Could not reach prediction server. Tried: ${urls.join(', ')}. Make sure the Flask backend is running locally or that CODESPACE_SERVER_URL is set in server_config.js.`);
 }
 
 // Function to fetch prediction and confidence
@@ -140,7 +141,8 @@ function getPrediction() {
         url_text.textContent = `Current URL: ${currenturl}`;
 
         const configuredUrls = getConfiguredServerUrls();
-        const serverUrls = [...new Set([...DEFAULT_SERVER_URLS, ...configuredUrls])];
+        console.log('Configured server URLs:', configuredUrls);
+        const serverUrls = [...new Set([...configuredUrls, ...DEFAULT_SERVER_URLS])];
 
         try {
             const data = await fetchPrediction(serverUrls, { url: currentTab.url });
@@ -151,7 +153,7 @@ function getPrediction() {
         } catch (error) {
             console.error('Error fetching prediction:', error);
             prediction_text.textContent = 'Error fetching prediction';
-            confidence_text.textContent = 'Confidence: Not available';
+            confidence_text.textContent = error.message || 'Confidence: Not available';
             container.style.backgroundColor = '#dfe3e6'; // Neutral background for errors
         }
     });
