@@ -1,109 +1,87 @@
-# I have chosen to keep this file in order to show the steps I took to preprocess the dataset
-# The code is not run and is not needed for the final code to run
-
-#do 'pip install pandas if panda is not installed
-# Importing the libraries
 import pandas as pd
 from urllib.parse import urlparse
 from sklearn.preprocessing import LabelEncoder
-import numpy as np
-# Load the dataset 
-# Make sure to use the correct path if othrs are running 
-original_dataset = pd.read_csv('/workspaces/Browser-extension-FYP-/dataset_phishing.csv')
-dataset_no_url = pd.read_csv('/workspaces/Browser-extension-FYP-/dataset_no_url.csv')
-dataset_with_url = pd.read_csv('/workspaces/Browser-extension-FYP-/dataset_with_url.csv')
 
+
+# Load the dataset
+original_dataset = pd.read_csv('datasets\dataset_phishing.csv')
+dataset_no_url = pd.read_csv('datasets\dataset_no_url.csv')
+dataset_with_url = pd.read_csv('datasets\dataset_with_url.csv')
 
 # STEP 1 
-# Display the first few rows of the dataset
-print(original_dataset.head())
+# Drop non-URL-based features only if they exist in the dataset
+# non_url_features = [
 
-#Check datatypes with all the rows showing 
-print(original_dataset.dtypes)
+#     # Third-party dependent (excluded by your instruction)
+#     'whois_registered_domain',
+#     'domain_registration_length',
+#     'domain_age',
+#     'web_traffic',
+#     'dns_record',
+#     'google_index',
+#     'page_rank',
+#      'nb_redirection',
+#    'nb_external_redirection',
 
-# Ckecking if the datatset is balanced by checking legitamate against phishing in the status column
-print(original_dataset['status'].value_counts())
+#     'shortest_words_raw',               # Weak semantic signal
+#     'path_extension',                   # Mostly 0 or noisy
+#     'domain_in_title',                 # Often 0 or non-informative
+#     'domain_with_copyright',           # Rare and inconsistent
+#     'submit_email',                    # Almost always 0
+#     'external_favicon',                # Unreliable signal
+#     'login_form',                      # Often false negatives
+#     'iframe',                          # Rare nowadays
+#     'sfh'                              # Inconsistent across sites
+# ]
 
-# Drops the url column from the datset and create a copy 
+# # Only drop columns that actually exist in the dataset
+# columns_to_drop = [col for col in non_url_features if col in dataset_no_url.columns]
+# print("Dropping columns:", columns_to_drop)
 
-try:
-    original_dataset.drop(columns=['url'], inplace=True) 
-    print("Url column dropped")
-    original_dataset.to_csv('/workspaces/Browser-extension-FYP-/dataset_no_url_.csv', index=False)
-    print("Updated dataset saved to 'dataset_no_url.csv'")
-except:
-    print("Column has already been dropped")
+# dataset_no_url = dataset_no_url.drop(columns=columns_to_drop)
+# dataset_with_url = dataset_with_url.drop(columns=columns_to_drop)
 
+# # Save the updated dataset
+# dataset_with_url.to_csv('datasets/dataset_with_url.csv', index=False)
+# print("Cleaned dataset saved.")
+# dataset_no_url.to_csv('datasets/dataset_no_url.csv', index=False)
+# print("Cleaned dataset_no_url saved.")
 
-# Get features from the url to change to numerical values
-def extract_url_features(url):
-    parsed = urlparse(url)
-    return {
-        'url_numeric_domain': parsed.netloc,
-        'url_numeric_path_length': len(parsed.path),
-        'url_numeric_num_subdomains': parsed.netloc.count('.') - 1,
-        'url_numeric_has_ip': int(any(char.isdigit() for char in parsed.netloc)),
-        'url_numeric_uses_https': int(parsed.scheme == 'https'),
-        'url_numeric_has_special_chars': int(any(char in parsed.path for char in ['@', '-', '=']))
-    }
+# # STEP 2
+# dataset_no_url.drop(columns=['url'], inplace=True)
+# dataset_no_url.to_csv('datasets/dataset_no_url.csv', index=False)
+# print("Dropped URL column from dataset_no_url.")
 
-# apply feature extraction
-features = original_dataset['url'].apply(extract_url_features)
-features_df = pd.DataFrame(features.tolist())
+# #STEP 3
+# def extract_url_features(url):
+#     parsed = urlparse(url)
+#     return {
+#         # Removed 'url_numeric_domain': parsed.netloc
+#         'url_numeric_path_length': len(parsed.path),
+#         'url_numeric_num_subdomains': parsed.netloc.count('.') - 1,
+#         'url_numeric_has_ip': int(any(char.isdigit() for char in parsed.netloc)),
+#         'url_numeric_has_special_chars': int(any(char in parsed.path for char in ['@', '-', '=']))
+#     }
 
-# Make the url_numeric_domain' a numerical value 
-features_df['url_numeric_domain'] = LabelEncoder().fit_transform(features_df['url_numeric_domain'])
-dataset = pd.concat([original_dataset.drop(columns=['url']), features_df], axis=1)
-print("Url converted to numerical")
-dataset.to_csv("dataset_with_url.csv", index=False)
+# # Extract features from URL column
+# url_features = dataset_with_url['url'].apply(extract_url_features)
+# url_features_df = pd.DataFrame(url_features.tolist())
 
+# # Merge features back into dataset (excluding the 'url' column)
+# dataset_with_url = pd.concat([dataset_with_url.drop(columns=['url']), url_features_df], axis=1)
 
-# Map the features for comparison
-feature_checks = {
-    'url_numeric_has_ip': ['ip'],
-    'url_numeric_uses_https': ['https_token'],
-    'url_numeric_path_length': ['length_url'],
-    'url_numeric_num_subdomains': ['nb_subdomains'],
-    'url_numeric_has_special_chars': ['nb_at', 'nb_hyphens', 'nb_eq'],
-}
+# # Save the updated dataset
+# dataset_with_url.to_csv('datasets/dataset_with_url.csv', index=False)
+# print("URL features extracted and dataset_with_url updated.")
 
-# Compare numeric features with the original dataset
-for extracted_feat, matches in feature_checks.items():
-    if extracted_feat == 'url_numeric_domain':
-        continue 
+# #STEP 4
+# Map 'legitimate' to 0 and 'phishing' to 1 in dataset_no_url
+# dataset_no_url['status'] = dataset_no_url['status'].map({'legitimate': 0, 'phishing': 1})
+# dataset_no_url.to_csv('datasets\dataset_no_url.csv', index=False)
+# print("Mapped and saved dataset_no_url")
 
-    for match in matches:
-        if extracted_feat in dataset.columns and match in dataset.columns:
-            print(f"\nComparing: {extracted_feat} and {match}")
-            
-            if (dataset[extracted_feat] == dataset[match]).all():
-                print(" Identical values — consider dropping one.")
-                continue
+# # Map 'legitimate' to 0 and 'phishing' to 1 in dataset_with_url
+# dataset_with_url['status'] = dataset_with_url['status'].map({'legitimate': 0, 'phishing': 1})
+# dataset_with_url.to_csv('datasets\dataset_with_url.csv', index=False)
+# print("Mapped and saved dataset_with_url")
 
-            corr = np.corrcoef(dataset[extracted_feat], dataset[match])[0, 1]
-            print(f" Correlation: {corr:.4f}")
-
-            if abs(corr) > 0.95:
-                print(" High correlation probably a duplicate.")
-            elif abs(corr) > 0.5:
-                print(" Medium correlation might be useful ")
-            else:
-                print(" Low correlation most likely keep this.")
-        else:
-            print(f" Skipping: '{extracted_feat}' or '{match}' not found.")
-
-#Drop columns based on comparison            
-
-columns_to_drop = ['url_numeric_uses_https']
-dataset.drop(columns=columns_to_drop, inplace=True)
-print("Column dropped")
-# # Save the cleaned dataset
-dataset.to_csv("updated.csv", index=False)
-print("Dataset saved")
-
-# STEP 3
-dataset_no_url['status'] = dataset_no_url['status'].map({'legitimate': 0, 'phishing': 1})
-dataset_no_url.to_csv('/workspaces/Browser-extension-FYP-/dataset_no_url.csv', index=False)
-
-dataset_with_url['status'] = dataset_with_url['status'].map({'legitimate': 0, 'phishing': 1})
-dataset_with_url.to_csv('/workspaces/Browser-extension-FYP-/dataset_with_url.csv', index=False)

@@ -537,7 +537,8 @@ suspecious_tlds = ['fit','tk', 'gp', 'ga', 'work', 'ml', 'date', 'wang', 'men', 
 
 
 def suspecious_tld(tld):
-   if tld in suspecious_tlds:
+    if tld in suspecious_tlds:
        return 1
-   return 0
+    else:
+       return 0
     

@@ -4,20 +4,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Phishing Detection Extension</title>
+    <link rel="stylesheet" href="style.css"> <!-- Linking the CSS file -->
 </head>
 
 <body>
-    <h1> Hello Extensions</h1>
-    <button id="button1">Click me</button>
-    <!-- <button id="urlbutton">geturl</button> -->
-    <p id="url"> Current URL</p>
-    <p id="prediction">The predicition is</p>
+    <div class="container" id="main-interface">
+        <h1 class="title">Phishing Detector</h1>
+        <div class="hook-container">
+            <div class="hook">
+                <div class="hook-top"></div>
+                <div class="hook-bottom"></div>
+            </div>
+        </div>
+
+        <button id="button1" class="btn">Check URL</button>
+        <p id="url" class="url-display">Current URL: <span id="current-url">Not available</span></p>
+        <p id="prediction" class="prediction-text">Prediction: <span id="prediction-result">Loading...</span></p>
+        <p id="confidence" class="confidence-text">Confidence: <span id="confidence-result">Loading...</span></p>
+
+        <button id="report-button" class="btn report-btn">Report False Classification</button>
+    </div>
+
+    <!-- The hidden part -->
+    <div class="container" id="feedback-form" style="display: none;">
+        <h1 class="title">Report False Classification</h1>
+        <form id="report-form">
+            <label for="reported-url">URL:</label>
+            <input type="text" id="reported-url" name="reported-url" placeholder="Enter the URL" required>
+            <br>
+            <label for="correct-classification">Correct Classification:</label>
+            <select id="correct-classification" name="correct-classification" required>
+                <option value="safe">Safe</option>
+                <option value="phishing">Phishing</option>
+            </select>
+            <br>
+            <button type="submit" class="btn">Submit Feedback</button>
+        </form>
+        <button id="cancel-feedback" class="btn cancel-btn">Cancel</button>
+    </div>
+
+    <script defer src="server_config.js"></script>
+    <script defer src="test_skils.js"></script>
 </body>
 
 </html>
-
-
-<script defer src="server_config.js"></script>
-<script defer src="test_skils.js"></script>
-<link rel="stylesheet" href="style.css">
