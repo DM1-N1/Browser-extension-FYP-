@@ -94,39 +94,72 @@ function displaywarningpage(prediction) {
     }
 }
 
+const DEFAULT_SERVER_URLS = ['http://127.0.0.1:5000', 'http://localhost:5000'];
+const PREDICT_ENDPOINT = '/predict';
+
+function buildPredictUrl(baseUrl) {
+    return baseUrl.replace(/\/$/, '') + PREDICT_ENDPOINT;
+}
+
+function getConfiguredServerUrls() {
+    if (typeof getServerUrls === 'function') {
+        return getServerUrls().filter(Boolean);
+    }
+    return [];
+}
+
+async function fetchPrediction(urls, payload) {
+    for (const baseUrl of urls) {
+        try {
+            const response = await fetch(buildPredictUrl(baseUrl), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.warn(`Server request failed for ${baseUrl}:`, error);
+        }
+    }
+
+    throw new Error(`Could not reach prediction server. Tried: ${urls.join(', ')}`);
+}
+
 // Function to fetch prediction and confidence
 function getPrediction() {
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    chrome.tabs.query({ active: true, currentWindow: true }, async function (tabs) {
         let currentTab = tabs[0]; // Get the current page/tab the user is viewing
         let currenturl = String(currentTab.url);
         url_text.textContent = `Current URL: ${currenturl}`;
 
-        fetch("http://127.0.0.1:5000/predict", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ url: currentTab.url })
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log("Prediction result:", data.prediction);
-                console.log("Confidence level:", data.confidence);
-                changePredictionText(data.prediction, data.confidence); // Pass confidence to the function
-                displaywarningpage(data.prediction)
-            })
-            .catch(error => {
-                console.error("Error fetching prediction:", error);
-                prediction_text.textContent = "Error fetching prediction";
-                confidence_text.textContent = "Confidence: Not available";
-                container.style.backgroundColor = "#dfe3e6"; // Neutral background for errors
-            });
+        const configuredUrls = getConfiguredServerUrls();
+        const serverUrls = [...new Set([...DEFAULT_SERVER_URLS, ...configuredUrls])];
+
+        try {
+            const data = await fetchPrediction(serverUrls, { url: currentTab.url });
+            console.log('Prediction result:', data.prediction);
+            console.log('Confidence level:', data.confidence);
+            changePredictionText(data.prediction, data.confidence); // Pass confidence to the function
+            displaywarningpage(data.prediction);
+        } catch (error) {
+            console.error('Error fetching prediction:', error);
+            prediction_text.textContent = 'Error fetching prediction';
+            confidence_text.textContent = 'Confidence: Not available';
+            container.style.backgroundColor = '#dfe3e6'; // Neutral background for errors
+        }
     });
 }
 
 button.addEventListener('click', buttonpress);
 reportButton.addEventListener('click', showFeedbackForm);
-cancelFeedbackButton.addEventListener('click', hideFeedbackForm); 
-reportForm.addEventListener('submit', handleFormSubmission); 
+cancelFeedbackButton.addEventListener('click', hideFeedbackForm);
+reportForm.addEventListener('submit', handleFormSubmission);
 
 getPrediction();
