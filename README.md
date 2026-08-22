@@ -11,16 +11,27 @@ This is a browser extension that uses AI to detect whether a site is legitimate 
 ## Installation
 1. Clone this repository
 
-2. Open your browser and navigate to the extensions page:
+2. Install Python dependencies in the repository environment:
+   - `python3 -m pip install -r requirements.txt`
+
+3. Start the Flask backend from the repository root:
+   - `source venv/bin/activate && python app.py`
+
+4. Open your browser and navigate to the extensions page:
    - For Chrome: `chrome://extensions/`
-3. Enable "Developer mode."
-4. Click "Load unpacked" and select the cloned repository folder.
-5. Ensure Pycache is deleted before running 
+5. Enable "Developer mode."
+6. Click "Load unpacked" and select the cloned repository folder.
+
+## Notes for Codespaces
+- If the backend runs inside a Codespace, the extension cannot use `http://127.0.0.1:5000` from your browser.
+- Set `CODESPACE_SERVER_URL` in `server_config.js` to the forwarded preview URL for your Codespace.
+- Example:
+  - `const CODESPACE_SERVER_URL = 'https://<your-codespace-id>-5000.preview.app.github.dev'`
 
 ## Usage
-1. Once installed, the extension will automatically analyze websites as you browse.
-2. If a website is flagged as suspicious, you will receive a notification with further details.
-3. Use the extension icon in the toolbar to  or disable the extension.
+1. Once installed and the backend is running, open the extension popup.
+2. The popup will try the local Flask server first, then the configured Codespace backend if provided.
+3. If the extension still says "Error fetching prediction," check the browser console and confirm the backend is reachable.
 
 
 

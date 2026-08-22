@@ -1,0 +1,6 @@
+pip install -r requirements.txt   to install dependencies
+
+To run app.py do 'python app.py' or 'python3 app.py'
+
+
+WHEN RUNNING ON CODESPACE IT NEEDS PYCACHE TO RECOGNISE THE MANIFEST
