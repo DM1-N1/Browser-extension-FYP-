@@ -7,7 +7,7 @@ const LOCALHOST_SERVER_URL = 'http://localhost:5000'
 // If your backend runs in a GitHub Codespace, set CODESPACE_SERVER_URL to the forwarded preview URL.
 // Example:
 // const CODESPACE_SERVER_URL = 'https://<your-codespace-id>-5000.preview.app.github.dev'
-const CODESPACE_SERVER_URL = ''
+const CODESPACE_SERVER_URL = 'https://fuzzy-fiesta-6wwqqp5w6rxh474-5000.app.github.dev/'
 
 // Add any extra backend endpoints you want the extension to try.
 const ADDITIONAL_SERVER_URLS = [
