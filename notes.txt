@@ -19,3 +19,22 @@ training/train_model_with_url).
 If retraining again from scratch off the raw dataset_phishing.csv, remember
 ratio_extRedirection is no longer part of the feature set - don't reintroduce it
 without also fixing external_redirection to be timeout-bound/rate-limited.
+
+OTHER SPEED ITEMS - not done yet, future changes:
+- is_URL_accessible (feature_extractorv3.py) can make 2 sequential requests.get
+  calls (retries with www.), 5s timeout each, worst case ~10s.
+- No requests.Session reuse anywhere - every requests.get opens a fresh
+  connection instead of reusing keep-alive.
+- statistical_report (url_features.py) does a socket.gethostbyname DNS lookup
+  with no timeout - can stall on slow/unreachable DNS.
+- BeautifulSoup uses 'html.parser' (pure python, slow). Installing lxml and
+  parsing with it would be faster.
+- extract_data_from_URL (feature_extractorv3.py) walks the DOM 15+ separate
+  times (one find_all per tag type) - could be consolidated.
+- No caching - same URL requested twice (e.g. reopening popup) redoes the
+  whole fetch+parse+feature pipeline from scratch. A short TTL cache keyed by
+  URL would make repeat lookups instant.
+- tldextract.extract(url) is called twice per classification - check its
+  suffix-list cache is warm/writable so it's not hitting the network.
+- app.py runs Flask with debug=True (dev server, single-threaded reloader
+  overhead) - fine for local use but turn off for anything more than that.
