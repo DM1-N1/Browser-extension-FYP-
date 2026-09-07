@@ -85,3 +85,21 @@ dataset_with_url = pd.read_csv('datasets\dataset_with_url.csv')
 # dataset_with_url.to_csv('datasets\dataset_with_url.csv', index=False)
 # print("Mapped and saved dataset_with_url")
 
+# STEP 5
+# Drop 'ratio_extRedirection' from the already-preprocessed datasets.
+# Removed because computing it live requires firing an HTTP request at every
+# external link/script/css/media/favicon found on a page with no timeout,
+# which was the main cause of slow classification in app.py. See notes.txt.
+redirection_features = ['ratio_extRedirection']
+
+columns_to_drop_step5 = [col for col in redirection_features if col in dataset_no_url.columns]
+print("Dropping columns (step 5):", columns_to_drop_step5)
+
+dataset_no_url = dataset_no_url.drop(columns=columns_to_drop_step5)
+dataset_with_url = dataset_with_url.drop(columns=[col for col in redirection_features if col in dataset_with_url.columns])
+
+dataset_no_url.to_csv('datasets/dataset_no_url.csv', index=False)
+print("Dropped ratio_extRedirection and saved dataset_no_url.")
+dataset_with_url.to_csv('datasets/dataset_with_url.csv', index=False)
+print("Dropped ratio_extRedirection and saved dataset_with_url.")
+
