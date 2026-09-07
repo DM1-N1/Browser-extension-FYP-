@@ -6,3 +6,16 @@ To run app.py do 'python app.py' or 'python3 app.py or 'py app.py '
 WHEN RUNNING ON CODESPACE IT NEEDS PYCACHE TO RECOGNISE THE MANIFEST
 
 Need it to be faster and better classififcation.
+
+ratio_extRedirection was removed (feature_extractorv3.py, app.py feature_order,
+dataset_no_url.csv, dataset_with_url.csv) because computing it live fired a
+separate HTTP request with no timeout at every single external link/script/css
+/media/favicon found on a page (content_features.py external_redirection ->
+h_e_redirect). A link-heavy page meant dozens/hundreds of blocking requests
+before a verdict came back, and any one slow/unresponsive server could stall
+classification for minutes. Model was retrained on dataset_with_url.csv without
+this column (ai_model.pkl / features.pkl regenerated via
+training/train_model_with_url).
+If retraining again from scratch off the raw dataset_phishing.csv, remember
+ratio_extRedirection is no longer part of the feature set - don't reintroduce it
+without also fixing external_redirection to be timeout-bound/rate-limited.

@@ -569,7 +569,10 @@ def extract_features_super(url):
     features['ratio_nullHyperlinks'] = ctnfe.null_hyperlinks(hostname, Href, Link, Media, Form, CSS, Favicon)
     features['nb_extCSS'] = ctnfe.external_css(CSS)
     # features['ratio_intRedirection'] = ctnfe.internal_redirection(Href, Link, Media, Form, CSS, Favicon)
-    features['ratio_extRedirection'] = ctnfe.external_redirection(Href, Link, Media, Form, CSS, Favicon)
+    # ratio_extRedirection removed: ctnfe.external_redirection() fires a separate,
+    # timeout-less HTTP request for every external link/script/css/media/favicon
+    # on the page, which was the main cause of slow classification. Dropped from
+    # the model and from dataset_no_url.csv / dataset_with_url.csv too. See notes.txt.
     # features['ratio_intErrors'] = ctnfe.internal_errors(Href, Link, Media, Form, CSS, Favicon)
     # features['ratio_extErrors'] = ctnfe.external_errors(Href, Link, Media, Form, CSS, Favicon)
     # features['links_in_tags'] = ctnfe.links_in_tags(Link)

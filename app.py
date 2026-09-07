@@ -30,7 +30,7 @@ feature_order = ['length_url', 'length_hostname', 'ip', 'nb_dots', 'nb_hyphens',
        'avg_words_raw', 'avg_word_host', 'avg_word_path', 'phish_hints',
        'domain_in_brand', 'brand_in_subdomain', 'brand_in_path',
        'suspecious_tld', 'statistical_report', 'ratio_nullHyperlinks',
-       'nb_extCSS', 'ratio_extRedirection', 'ratio_intMedia', 'ratio_extMedia',
+       'nb_extCSS', 'ratio_intMedia', 'ratio_extMedia',
        'popup_window', 'safe_anchor', 'onmouseover', 'right_clic',
        'empty_title', 'url_numeric_num_subdomains', 'url_numeric_has_ip']
 
