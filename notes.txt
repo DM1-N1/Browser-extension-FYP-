@@ -72,3 +72,45 @@ CONFIDENCE/ACCURACY FIXES (2026-09):
    proofing fix, not just github.com specifically.
    Fix: added href=True to that find_all call, matching the pattern already
    used by the other tag loops in the same function.
+
+3. Even after fixes 1 and 2, real legitimate pages with query-string-heavy
+   URLs were still weak/wrong calls - e.g. wikipedia.org's edit interface
+   (?title=...&action=edit&section=4) came back as phishing @ 54%. Checked
+   the raw training data (dataset_phishing.csv) directly: 96.6% of legitimate
+   rows have zero '?' in the URL, vs only 76.2% of phishing rows (mean nb_qm
+   0.034 legit vs 0.248 phishing, mean nb_eq 0.060 vs 0.526, mean nb_and 0.022
+   vs 0.302). The legitimate class in this dataset skews hard toward simple,
+   static, query-string-free pages (sampled from top-domain homepages), so
+   the model partly learned "has a query string with = or &" as a mildly
+   suspicious signal - true for this dataset's legitimate sample, false in
+   general (wikis, search engines, e-commerce, forums, docs sites all
+   legitimately use query strings).
+   This is a data coverage gap, not a code bug or a bad feature - nb_qm/
+   nb_eq/nb_and are genuinely predictive overall (the mean gap is real), so
+   dropping/reweighting them would blunt a useful signal rather than fix the
+   actual problem. Considered and rejected a domain allowlist (bypasses the
+   ML entirely, doesn't scale beyond the list) and feature engineering
+   (would blunt otherwise-useful features) in favour of augmenting the
+   legitimate class with more real complex-but-legitimate examples so the
+   model itself learns the distinction properly.
+   DATA AUGMENTATION (additional-dataset branch): added 170 real, live
+   legitimate URLs with query strings across several unrelated domains -
+   Wikipedia/Wiktionary edit & history & search pages, YouTube watch links,
+   and search-result pages on Stack Overflow, GitHub, Reddit, MDN, npm,
+   PyPI, DuckDuckGo, arXiv, eBay, IMDB and usa.gov - deliberately spread
+   across categories so the model doesn't just learn "query strings are ok
+   on wikipedia.org specifically". Features extracted with the same (now
+   fixed) extract_features_super() used by the live app, labelled
+   legitimate (status=0), appended to dataset_no_url.csv and
+   dataset_with_url.csv. See augment_dataset.py for the exact URL list and
+   extraction logic - it's reproducible/extendable if more augmentation is
+   wanted later.
+   Effect: legitimate rows 5715 -> 5885 (170 added, all succeeded, 0
+   failed). Legitimate % with a query string moved 3.4% -> 6.17% (still well
+   below phishing's 24.8%, so this closes part of the gap, not all of it -
+   deliberately kept modest rather than adding a huge batch). Class balance
+   now 5885 legitimate / 5715 phishing (~1.5% skew, not significant).
+   Model was NOT retrained as part of this change - dataset only, on the
+   additional-dataset branch. Retrain via training/train_model_with_url once
+   ready to validate the effect on real cases like the wikipedia.org edit
+   URL above.
