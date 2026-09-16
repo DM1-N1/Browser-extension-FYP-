@@ -38,3 +38,37 @@ OTHER SPEED ITEMS - not done yet, future changes:
   suffix-list cache is warm/writable so it's not hitting the network.
 - app.py runs Flask with debug=True (dev server, single-threaded reloader
   overhead) - fine for local use but turn off for anything more than that.
+
+CONFIDENCE/ACCURACY FIXES (2026-09):
+
+1. nb_www and nb_com were always 0 on every live prediction, regardless of
+   the URL. extract_features_super (feature_extractorv3.py) called
+   urlfe.check_www(url) / urlfe.check_com(url) passing the raw URL STRING,
+   but both functions are written to loop over a LIST of words
+   (`for word in words_raw: word.find('www')`). Passing a string iterates it
+   character by character, so a 3-letter substring like 'www' or 'com' can
+   never match a single character - count stays 0 no matter what.
+   The offline script that built the training data (feature_extractor_dataset)
+   called these correctly with the words_raw list, so the model was trained on
+   real varying values (0/1/2...) for these features but was being fed a
+   constant wrong value (0) at serve time - a train/serve mismatch.
+   nb_www is the model's 2nd most important feature by feature_importances_
+   (right behind safe_anchor), so this was dragging real www-prefixed
+   legitimate sites toward "phishing" with weak confidence. Example before/
+   after fix on wikipedia.org: phishing @ 55.5% (wrong) -> legitimate @ 88.1%
+   (correct). google.com and github.com also flipped to correct, high
+   confidence legitimate calls.
+   Fix: pass the already-computed `words_raw` list (feature_extractorv3.py,
+   in scope earlier in extract_features_super) instead of `url` on both lines.
+
+2. extract_data_from_URL (feature_extractorv3.py) crashed with
+   KeyError: 'href' on real pages (found via github.com). The stylesheet-link
+   loop `soup.find_all('link', rel='stylesheet')` didn't filter for href=True
+   like every other tag loop in that function does, so any <link
+   rel="stylesheet"> tag with no href attribute (common on real-world sites)
+   raised an unhandled KeyError. In the live app this surfaced as a failed
+   /predict request (caught by app.py's try/except -> 500, no prediction
+   returned) for any site with that HTML pattern - a reliability/future-
+   proofing fix, not just github.com specifically.
+   Fix: added href=True to that find_all call, matching the pattern already
+   used by the other tag loops in the same function.

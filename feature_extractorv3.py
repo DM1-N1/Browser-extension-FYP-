@@ -186,7 +186,7 @@ def extract_data_from_URL(hostname, content, domain, Href, Link, Anchor, Media, 
            
             
     # collect all css
-    for link in soup.find_all('link', rel='stylesheet'):
+    for link in soup.find_all('link', rel='stylesheet', href=True):
         dots = [x.start(0) for x in re.finditer(r'\.', link['href'])]
         if hostname in link['href'] or domain in link['href'] or len(dots) == 1 or not link['href'].startswith('http'):
             if not link['href'].startswith('http'):
@@ -531,8 +531,8 @@ def extract_features_super(url):
     features['nb_semicolumn'] = urlfe.count_semicolumn(url) 
     features['nb_dollar'] = urlfe.count_dollar(url)  
     features['nb_space'] = urlfe.count_space(url) 
-    features['nb_www'] = urlfe.check_www(url) 
-    features['nb_com'] = urlfe.check_com(url) 
+    features['nb_www'] = urlfe.check_www(words_raw)
+    features['nb_com'] = urlfe.check_com(words_raw)
     features['nb_dslash'] = urlfe.count_double_slash(url)  
     features['http_in_path'] = urlfe.count_http_token(path)  
     features['https_token'] = urlfe.https_token(scheme)  
